@@ -298,11 +298,12 @@ function initCategoryPage(allMenus) {
       </div>
     `;
 
-    // 카드 바디 클릭 시 상세 페이지 이동 (새로운 동적 라우팅 URL 연결)
+    // 카드 바디 클릭 시 셰프 선택 페이지로 이동 (징검다리 다리 연결)
     card.addEventListener('click', (e) => {
       // 별표 버튼 클릭 시에는 상세 이동 방지
       if (e.target.closest('.fav-btn')) return;
-      window.location.href = getRecipeURL(menu);
+      const catCode = categoryCodeMap[menu.category] || menu.category;
+      window.location.href = `/chefs.html?category=${encodeURIComponent(catCode)}&food=${encodeURIComponent(menu.name)}`;
     });
 
     // 별표 버튼 클릭 핸들러

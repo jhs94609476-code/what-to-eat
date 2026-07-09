@@ -67,7 +67,7 @@
   <!-- Header Nav -->
   <header class="sticky top-0 z-40 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <a href="index.html" class="flex items-center space-x-2 font-outfit">
+      <a href="/index.html" class="flex items-center space-x-2 font-outfit">
         <span class="bg-gradient-to-tr from-purple-500 to-pink-500 text-white rounded-xl w-9 h-9 flex items-center justify-center font-black text-lg shadow-neon-purple">
           W
         </span>
@@ -114,7 +114,7 @@
   </footer>
 
   <!-- Web App Logic -->
-  <script src="sheets.js"></script>
+  <script src="/sheets.js"></script>
   <script>
     // URLUtils helper
     const URLUtils = {
@@ -125,12 +125,13 @@
     };
 
     const categoryCodeMap = {
-      '한식': 'what-to-eat-kr',
-      '중식': 'what-to-eat-ch',
-      '양식': 'what-to-eat-we',
-      '일식': 'what-to-eat-ja',
-      '반찬': 'what-to-eat-si',
-      '식재료 팁': 'what-to-eat-ti'
+      '한식레시피': 'what-to-eat-kr',
+      '중식레시피': 'what-to-eat-ch',
+      '양식레시피': 'what-to-eat-western',
+      '일식레시피': 'what-to-eat-jp',
+      '세계레시피': 'what-to-eat-global',
+      '반찬레시피': 'what-to-eat-side',
+      '식재료팁': 'what-to-eat-ingredients'
     };
 
     async function initApp() {
@@ -140,7 +141,7 @@
 
       if (!foodName) {
         alert('요리명이 올바르지 않습니다.');
-        window.location.href = 'index.html';
+        window.location.href = '/index.html';
         return;
       }
 
@@ -167,7 +168,7 @@
           const cleanCat = catCode.trim().replace(/\s+/g, '-');
           const cleanFood = recipe.name.trim().replace(/\s+/g, '-');
           const cleanChef = recipe.chefName.trim().replace(/\s+/g, '-');
-          const detailUrl = `/recipe/${cleanCat}-${cleanFood}-${cleanChef}`;
+          const detailUrl = `/recipe/${cleanCat}-${cleanFood}-${cleanChef}/`;
 
           // 버튼 마크업 생성
           const button = document.createElement('a');
@@ -177,12 +178,12 @@
           button.innerHTML = `
             <div class="flex items-center space-x-4">
               <div class="bg-gradient-to-tr from-purple-500 to-pink-500 text-white rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm shadow-inner group-hover:scale-105 transition-transform">
-                ${recipe.category === '식재료 팁' ? '📝' : recipe.chefName.substring(0, 1)}
+                ${recipe.category === '식재료팁' ? '📝' : recipe.chefName.substring(0, 1)}
               </div>
               <div class="text-left">
                 <span class="text-xs text-purple-400 font-bold uppercase tracking-wider">${recipe.chefName}</span>
                 <h4 class="font-extrabold text-white text-base group-hover:text-purple-300 transition-colors mt-0.5">
-                  ${recipe.chefName} ${recipe.name} 레시피 보러가기
+                  ${recipe.chefName} ${recipe.name} 레시피
                 </h4>
               </div>
             </div>

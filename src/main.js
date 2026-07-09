@@ -390,9 +390,20 @@ function showModal(menu) {
   winnerName.textContent = menu.name;
   winnerDescription.textContent = menu.description;
 
+  const categoryCodeMap = {
+    '한식레시피': 'what-to-eat-kr',
+    '중식레시피': 'what-to-eat-ch',
+    '양식레시피': 'what-to-eat-western',
+    '일식레시피': 'what-to-eat-jp',
+    '세계레시피': 'what-to-eat-global',
+    '반찬레시피': 'what-to-eat-side',
+    '식재료팁': 'what-to-eat-ingredients'
+  };
+
   // '레시피 보러 가기' 버튼에 동적 액션 (징검다리 셰프 리스트 화면 이동)
   viewRecipeBtn.onclick = () => {
-    window.location.href = `/chefs.html?food=${encodeURIComponent(menu.name)}`;
+    const catCode = categoryCodeMap[menu.category] || menu.category;
+    window.location.href = `/chefs.html?category=${encodeURIComponent(catCode)}&food=${encodeURIComponent(menu.name)}`;
   };
 
   // '카카오톡으로 공유하기' 네이티브 브라우저 공유 연동
