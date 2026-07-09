@@ -309,11 +309,12 @@ function updateFilteredMenus(keepExistingShuffle = false) {
       filtered = state.allMenus.filter(menu => FavoriteManager.isFavorite(menu.id));
     } else {
       const tabMap = {
-        korean: '한식레시피 모음',
-        chinese: '중식레시피 모음',
-        western: '양식레시피 모음',
-        japanese: '일식레시피 모음',
-        side: '반찬레시피 모음',
+        korean: '한식레시피',
+        chinese: '중식레시피',
+        western: '양식레시피',
+        japanese: '일식레시피',
+        global: '세계레시피',
+        side: '반찬레시피',
         tip: '식재료팁'
       };
       const categoryName = tabMap[state.activeTab];
@@ -324,10 +325,10 @@ function updateFilteredMenus(keepExistingShuffle = false) {
     const checkedBoxes = Array.from(document.querySelectorAll('.category-checkbox:checked'));
     const checkedCategories = checkedBoxes.map(cb => cb.value);
 
-    // 반찬레시피 모음과 식재료팁은 룰렛 추천 후보군에서 제외 (순수 단품 메인 요리만 노출)
+    // 반찬레시피와 식재료팁은 룰렛 추천 후보군에서 제외 (순수 단품 메인 요리만 노출)
     filtered = state.allMenus.filter(menu => 
       menu.category !== '식재료팁' && 
-      menu.category !== '반찬레시피 모음' && 
+      menu.category !== '반찬레시피' && 
       checkedCategories.includes(menu.category)
     );
   }

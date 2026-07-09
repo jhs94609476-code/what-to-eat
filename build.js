@@ -10,26 +10,23 @@ const SITE_DOMAIN = 'https://what-to-eat-roulette.vercel.app';
 
 
 const categoryCodeMap = {
-  '한식레시피 모음': 'what-to-eat-kr',
-  '중식레시피 모음': 'what-to-eat-ch',
-  '양식레시피 모음': 'what-to-eat-western',
-  '일식레시피 모음': 'what-to-eat-jp',
-  '반찬레시피 모음': 'what-to-eat-si',
-  '식재료팁': 'what-to-eat-ti'
+  '한식레시피': 'what-to-eat-kr',
+  '중식레시피': 'what-to-eat-ch',
+  '양식레시피': 'what-to-eat-western',
+  '일식레시피': 'what-to-eat-jp',
+  '세계레시피': 'what-to-eat-global',
+  '반찬레시피': 'what-to-eat-side',
+  '식재료팁': 'what-to-eat-ingredients'
 };
 
 const reverseCategoryCodeMap = {
-  'what-to-eat-kr': '한식레시피 모음',
-  'what-to-eat-ch': '중식레시피 모음',
-  'what-to-eat-we': '양식레시피 모음',
-  'what-to-eat-western': '양식레시피 모음',
-  'what-to-eat-ja': '일식레시피 모음',
-  'what-to-eat-jp': '일식레시피 모음',
-  'what-to-eat-japanese': '일식레시피 모음',
-  'what-to-eat-si': '반찬레시피 모음',
-  'what-to-eat-side': '반찬레시피 모음',
-  'what-to-eat-ti': '식재료팁',
-  'what-to-eat-tips': '식재료팁'
+  'what-to-eat-kr': '한식레시피',
+  'what-to-eat-ch': '중식레시피',
+  'what-to-eat-western': '양식레시피',
+  'what-to-eat-jp': '일식레시피',
+  'what-to-eat-global': '세계레시피',
+  'what-to-eat-side': '반찬레시피',
+  'what-to-eat-ingredients': '식재료팁'
 };
 
 
@@ -465,11 +462,12 @@ async function runBuild() {
 
     // 8) 상단 카테고리 네비게이션 액티브 탭 하이라이트 정적 빌드
     const reverseCategoryMap = {
-      '한식레시피 모음': 'korean',
-      '중식레시피 모음': 'chinese',
-      '양식레시피 모음': 'western',
-      '일식레시피 모음': 'japanese',
-      '반찬레시피 모음': 'side',
+      '한식레시피': 'korean',
+      '중식레시피': 'chinese',
+      '양식레시피': 'western',
+      '일식레시피': 'japanese',
+      '세계레시피': 'global',
+      '반찬레시피': 'side',
       '식재료팁': 'tip'
     };
     const catType = reverseCategoryMap[menu.category] || 'korean';

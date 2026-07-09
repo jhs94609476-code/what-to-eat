@@ -5,17 +5,13 @@ const SheetsManager = {
 
   // A열 카테고리 값과 화면 상 카테고리의 매핑 관계 정의
   categoryMap: {
-    'what-to-eat-kr': '한식레시피 모음',
-    'what-to-eat-ch': '중식레시피 모음',
-    'what-to-eat-we': '양식레시피 모음',
-    'what-to-eat-western': '양식레시피 모음',
-    'what-to-eat-ja': '일식레시피 모음',
-    'what-to-eat-jp': '일식레시피 모음',
-    'what-to-eat-japanese': '일식레시피 모음',
-    'what-to-eat-si': '반찬레시피 모음',
-    'what-to-eat-side': '반찬레시피 모음',
-    'what-to-eat-ti': '식재료팁',
-    'what-to-eat-tips': '식재료팁'
+    'what-to-eat-kr': '한식레시피',
+    'what-to-eat-ch': '중식레시피',
+    'what-to-eat-western': '양식레시피',
+    'what-to-eat-jp': '일식레시피',
+    'what-to-eat-global': '세계레시피',
+    'what-to-eat-side': '반찬레시피',
+    'what-to-eat-ingredients': '식재료팁'
   },
 
   // 유튜브 URL에서 11자리 비디오 ID 추출 헬퍼 함수

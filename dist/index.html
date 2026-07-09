@@ -92,20 +92,22 @@
       <!-- Nav Tabs -->
       <nav
         class="flex items-center space-x-2 text-xs bg-slate-900/60 p-1.5 rounded-2xl border border-slate-800 max-w-full overflow-x-auto no-scrollbar scroll-smooth">
-        <a href="category.html?type=korean" id="nav-korean"
+        <a href="/category.html?type=korean" id="nav-korean"
           class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.05rem] text-center block">한식<br>레시피</a>
-        <a href="category.html?type=chinese" id="nav-chinese"
+        <a href="/category.html?type=chinese" id="nav-chinese"
           class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.05rem] text-center block">중식<br>레시피</a>
-        <a href="category.html?type=western" id="nav-western"
+        <a href="/category.html?type=western" id="nav-western"
           class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.05rem] text-center block">양식<br>레시피</a>
-        <a href="category.html?type=japanese" id="nav-japanese"
+        <a href="/category.html?type=japanese" id="nav-japanese"
           class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.05rem] text-center block">일식<br>레시피</a>
-        <a href="category.html?type=side" id="nav-side"
+        <a href="/category.html?type=global" id="nav-global"
+          class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.05rem] text-center block">세계<br>레시피</a>
+        <a href="/category.html?type=side" id="nav-side"
           class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.05rem] text-center block">반찬<br>레시피</a>
-        <a href="category.html?type=tip" id="nav-tip"
+        <a href="/category.html?type=tip" id="nav-tip"
           class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-emerald-400 transition-all font-bold text-sm sm:text-[1.05rem] text-center block">📝<br>식재료팁</a>
         <span class="w-[1px] h-6 bg-slate-800 mx-1 flex-shrink-0"></span>
-        <a href="category.html?type=favorite" id="nav-favorite"
+        <a href="/category.html?type=favorite" id="nav-favorite"
           class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-amber-400 transition-all font-bold text-sm sm:text-[1.05rem] flex items-center space-x-1 whitespace-nowrap">
           <span>⭐️</span><span>찜목록</span>
         </a>
@@ -133,28 +135,35 @@
           <label
             class="relative flex items-center justify-between p-4 rounded-2xl border border-slate-700/50 cursor-pointer select-none bg-slate-800/30 transition-all hover:bg-slate-800/50 hover:border-purple-500/50 group">
             <span class="text-base font-semibold group-hover:text-purple-300 transition-colors">한식</span>
-            <input type="checkbox" value="한식레시피 모음" checked
+            <input type="checkbox" value="한식레시피" checked
               class="category-checkbox w-5 h-5 rounded-lg border-slate-700 text-purple-600 focus:ring-purple-500 focus:ring-offset-slate-900 bg-slate-900 cursor-pointer accent-purple-500">
           </label>
           <!-- Jung-sik -->
           <label
             class="relative flex items-center justify-between p-4 rounded-2xl border border-slate-700/50 cursor-pointer select-none bg-slate-800/30 transition-all hover:bg-slate-800/50 hover:border-purple-500/50 group">
             <span class="text-base font-semibold group-hover:text-purple-300 transition-colors">중식</span>
-            <input type="checkbox" value="중식레시피 모음" checked
+            <input type="checkbox" value="중식레시피" checked
               class="category-checkbox w-5 h-5 rounded-lg border-slate-700 text-purple-600 focus:ring-purple-500 focus:ring-offset-slate-900 bg-slate-900 cursor-pointer accent-purple-500">
           </label>
           <!-- Yang-sik -->
           <label
             class="relative flex items-center justify-between p-4 rounded-2xl border border-slate-700/50 cursor-pointer select-none bg-slate-800/30 transition-all hover:bg-slate-800/50 hover:border-purple-500/50 group">
             <span class="text-base font-semibold group-hover:text-purple-300 transition-colors">양식</span>
-            <input type="checkbox" value="양식레시피 모음" checked
+            <input type="checkbox" value="양식레시피" checked
               class="category-checkbox w-5 h-5 rounded-lg border-slate-700 text-purple-600 focus:ring-purple-500 focus:ring-offset-slate-900 bg-slate-900 cursor-pointer accent-purple-500">
           </label>
           <!-- Il-sik -->
           <label
             class="relative flex items-center justify-between p-4 rounded-2xl border border-slate-700/50 cursor-pointer select-none bg-slate-800/30 transition-all hover:bg-slate-800/50 hover:border-purple-500/50 group">
             <span class="text-base font-semibold group-hover:text-purple-300 transition-colors">일식</span>
-            <input type="checkbox" value="일식레시피 모음" checked
+            <input type="checkbox" value="일식레시피" checked
+              class="category-checkbox w-5 h-5 rounded-lg border-slate-700 text-purple-600 focus:ring-purple-500 focus:ring-offset-slate-900 bg-slate-900 cursor-pointer accent-purple-500">
+          </label>
+          <!-- Global -->
+          <label
+            class="relative flex items-center justify-between p-4 rounded-2xl border border-slate-700/50 cursor-pointer select-none bg-slate-800/30 transition-all hover:bg-slate-800/50 hover:border-purple-500/50 col-span-2 group">
+            <span class="text-base font-semibold group-hover:text-purple-300 transition-colors">세계 요리</span>
+            <input type="checkbox" value="세계레시피" checked
               class="category-checkbox w-5 h-5 rounded-lg border-slate-700 text-purple-600 focus:ring-purple-500 focus:ring-offset-slate-900 bg-slate-900 cursor-pointer accent-purple-500">
           </label>
         </div>

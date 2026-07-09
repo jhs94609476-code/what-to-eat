@@ -31,47 +31,46 @@ const URLUtils = {
 
 // 카테고리 영문 코드를 국문으로 변환
 const categoryMap = {
-  korean: '한식레시피 모음',
-  chinese: '중식레시피 모음',
-  western: '양식레시피 모음',
-  japanese: '일식레시피 모음',
-  side: '반찬레시피 모음',
+  korean: '한식레시피',
+  chinese: '중식레시피',
+  western: '양식레시피',
+  japanese: '일식레시피',
+  global: '세계레시피',
+  side: '반찬레시피',
   tip: '식재료팁'
 };
 
 // 국문 카테고리를 영문 탭 아이디 코드로 매핑
 const reverseCategoryMap = {
-  '한식레시피 모음': 'korean',
-  '중식레시피 모음': 'chinese',
-  '양식레시피 모음': 'western',
-  '일식레시피 모음': 'japanese',
-  '반찬레시피 모음': 'side',
+  '한식레시피': 'korean',
+  '중식레시피': 'chinese',
+  '양식레시피': 'western',
+  '일식레시피': 'japanese',
+  '세계레시피': 'global',
+  '반찬레시피': 'side',
   '식재료팁': 'tip'
 };
 
 // 국문 카테고리를 스프레드시트 영문 카테고리 코드 매핑
 const categoryCodeMap = {
-  '한식레시피 모음': 'what-to-eat-kr',
-  '중식레시피 모음': 'what-to-eat-ch',
-  '양식레시피 모음': 'what-to-eat-western',
-  '일식레시피 모음': 'what-to-eat-jp',
-  '반찬레시피 모음': 'what-to-eat-si',
-  '식재료팁': 'what-to-eat-ti'
+  '한식레시피': 'what-to-eat-kr',
+  '중식레시피': 'what-to-eat-ch',
+  '양식레시피': 'what-to-eat-western',
+  '일식레시피': 'what-to-eat-jp',
+  '세계레시피': 'what-to-eat-global',
+  '반찬레시피': 'what-to-eat-side',
+  '식재료팁': 'what-to-eat-ingredients'
 };
 
 // 스프레드시트 영문 카테고리 코드를 국문 카테고리로 매핑
 const reverseCategoryCodeMap = {
-  'what-to-eat-kr': '한식레시피 모음',
-  'what-to-eat-ch': '중식레시피 모음',
-  'what-to-eat-we': '양식레시피 모음',
-  'what-to-eat-western': '양식레시피 모음',
-  'what-to-eat-ja': '일식레시피 모음',
-  'what-to-eat-jp': '일식레시피 모음',
-  'what-to-eat-japanese': '일식레시피 모음',
-  'what-to-eat-si': '반찬레시피 모음',
-  'what-to-eat-side': '반찬레시피 모음',
-  'what-to-eat-ti': '식재료팁',
-  'what-to-eat-tips': '식재료팁'
+  'what-to-eat-kr': '한식레시피',
+  'what-to-eat-ch': '중식레시피',
+  'what-to-eat-western': '양식레시피',
+  'what-to-eat-jp': '일식레시피',
+  'what-to-eat-global': '세계레시피',
+  'what-to-eat-side': '반찬레시피',
+  'what-to-eat-ingredients': '식재료팁'
 };
 
 // 동적 URL 규칙 생성 함수
