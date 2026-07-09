@@ -536,9 +536,9 @@ async function initApp() {
 
     // 현재 페이지 구분에 따라 라우팅 처리
     const pathname = window.location.pathname;
-    if (pathname.includes('category.html')) {
+    if (pathname.includes('category')) {
       initCategoryPage(globalAllMenus);
-    } else if (pathname.includes('detail.html')) {
+    } else if (pathname.includes('detail')) {
       initDetailPage(globalAllMenus);
     }
   } catch (error) {

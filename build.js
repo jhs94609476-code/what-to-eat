@@ -343,13 +343,15 @@ async function runBuild() {
     allMenus = parseCSVToMenus(csvText);
     console.log(`✅ 구글 스프레드시트 파싱 완료: 총 ${allMenus.length}개의 레시피 획득`);
   } catch (err) {
-    console.warn('❌ 구글 스프레드시트 로드 중 에러 발생. 로컬 data.json으로 대체합니다.', err.message);
+    console.error('❌ [구글 시트 연동 오류 상세 정보]');
+    console.error(err.stack || err);
+    console.warn('⚠️ 구글 스프레드시트 로드에 실패하여 로컬 백업인 data.json으로 대체를 시도합니다.');
     try {
       const nestedData = JSON.parse(fs.readFileSync(path.join(SRC_DIR, 'data.json'), 'utf-8'));
       allMenus = flattenData(nestedData);
       console.log(`✅ 로컬 data.json 폴백 적용 완료: 총 ${allMenus.length}개의 레시피 로드`);
     } catch (fallbackErr) {
-      console.error('❌ 로컬 data.json 로드 실패. 빌드를 중단합니다.', fallbackErr.message);
+      console.error('❌ 로컬 data.json 로드 실패. 빌드를 중단합니다.', fallbackErr.stack || fallbackErr);
       process.exit(1);
     }
   }
@@ -430,7 +432,7 @@ async function runBuild() {
 
     // 5) 셰프 정보 블로그 HTML 사전 조립 및 치환
     const blogHtml = formatBlogRecipe(menu.description);
-    html = html.replace(/<div id="recipeBlogContainer" class="space-y-6">[\s\S]*?레시피 데이터를 불러오는 중\.\.\.<\/p>\s*<\/div>\s*<\/div>/, `<div id="recipeBlogContainer" class="space-y-6">${blogHtml}</div>`);
+    html = html.replace('<div id="recipeBlogContainer" class="space-y-6"></div>', `<div id="recipeBlogContainer" class="space-y-6">${blogHtml}</div>`);
 
     // 6) 셰프 타이틀 교체
     html = html.replace(
