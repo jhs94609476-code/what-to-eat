@@ -87,7 +87,7 @@
   <!-- Header -->
   <header class="border-b border-slate-800/60 sticky top-0 z-40 backdrop-blur-md bg-slate-950/80">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
-      <a href="index.html" class="flex items-center space-x-3 group self-start md:self-auto">
+      <a href="/index.html" class="flex items-center space-x-3 group self-start md:self-auto">
         <div class="bg-slate-800/80 p-2.5 rounded-2xl border border-slate-700/50 group-hover:border-purple-500/50 transition-colors">
           <svg class="w-5 h-5 text-slate-300 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -102,15 +102,23 @@
       </a>
       
       <!-- Nav Tabs -->
-      <nav class="flex items-center space-x-2 text-xs bg-slate-900/60 p-1.5 rounded-2xl border border-slate-800 max-w-full overflow-x-auto no-scrollbar scroll-smooth">
-        <a href="category.html?type=korean" id="nav-korean" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.2rem] whitespace-nowrap">한식레시피 모음</a>
-        <a href="category.html?type=chinese" id="nav-chinese" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.2rem] whitespace-nowrap">중식레시피 모음</a>
-        <a href="category.html?type=western" id="nav-western" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.2rem] whitespace-nowrap">양식레시피 모음</a>
-        <a href="category.html?type=japanese" id="nav-japanese" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.2rem] whitespace-nowrap">일식레시피 모음</a>
-        <a href="category.html?type=side" id="nav-side" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.2rem] whitespace-nowrap">반찬레시피 모음</a>
-        <a href="category.html?type=tip" id="nav-tip" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-emerald-400 transition-all font-bold text-sm sm:text-[1.2rem] whitespace-nowrap">📝 식재료팁</a>
+      <nav
+        class="flex items-center space-x-2 text-xs bg-slate-900/60 p-1.5 rounded-2xl border border-slate-800 max-w-full overflow-x-auto no-scrollbar scroll-smooth">
+        <a href="/category.html?type=korean" id="nav-korean"
+          class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.05rem] text-center block">한식<br>레시피</a>
+        <a href="/category.html?type=chinese" id="nav-chinese"
+          class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.05rem] text-center block">중식<br>레시피</a>
+        <a href="/category.html?type=western" id="nav-western"
+          class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.05rem] text-center block">양식<br>레시피</a>
+        <a href="/category.html?type=japanese" id="nav-japanese"
+          class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.05rem] text-center block">일식<br>레시피</a>
+        <a href="/category.html?type=side" id="nav-side"
+          class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.05rem] text-center block">반찬<br>레시피</a>
+        <a href="/category.html?type=tip" id="nav-tip"
+          class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-emerald-400 transition-all font-bold text-sm sm:text-[1.05rem] text-center block">📝<br>식재료팁</a>
         <span class="w-[1px] h-6 bg-slate-800 mx-1 flex-shrink-0"></span>
-        <a href="category.html?type=favorite" id="nav-favorite" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-amber-400 transition-all font-bold text-sm sm:text-[1.2rem] flex items-center space-x-1 whitespace-nowrap">
+        <a href="/category.html?type=favorite" id="nav-favorite"
+          class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-amber-400 transition-all font-bold text-sm sm:text-[1.05rem] flex items-center space-x-1 whitespace-nowrap">
           <span>⭐️</span><span>찜목록</span>
         </a>
       </nav>
@@ -274,8 +282,65 @@
     </div>
   </footer>
 
-  <!-- Web App Logic -->
-  <script src="sheets.js"></script>
-  <script src="recipe.js"></script>
+  <!-- Web App Interactivity (No Sheets Fetch needed, 100% Static) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const favBtn = document.getElementById('detailFavoriteBtn');
+      const shareRecipeBtn = document.getElementById('shareRecipeBtn');
+      if (!favBtn) return;
+      const menuId = favBtn.getAttribute('data-menu-id');
+      
+      const FavoriteManager = {
+        getFavorites() {
+          return JSON.parse(localStorage.getItem('favoriteRecipes') || '{}');
+        },
+        isFavorite(id) {
+          return !!this.getFavorites()[id];
+        },
+        toggleFavorite(id) {
+          const favs = this.getFavorites();
+          if (favs[id]) {
+            delete favs[id];
+          } else {
+            favs[id] = true;
+          }
+          localStorage.setItem('favoriteRecipes', JSON.stringify(favs));
+          return favs[id];
+        }
+      };
+
+      const getFavoriteIcon = (isFav) => {
+        if (isFav) {
+          return `<svg class="w-5 h-5 text-amber-400 fill-amber-400 transition-all duration-300 pointer-events-none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+        }
+        return `<svg class="w-5 h-5 text-slate-400 hover:text-amber-400 transition-all duration-300 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+      };
+
+      const updateFavBtnStyle = () => {
+        const isFav = FavoriteManager.isFavorite(menuId);
+        favBtn.innerHTML = getFavoriteIcon(isFav);
+        if (isFav) {
+          favBtn.classList.add('border-amber-500/40', 'bg-amber-950/20');
+        } else {
+          favBtn.classList.remove('border-amber-500/40', 'bg-amber-950/20');
+        }
+      };
+
+      updateFavBtnStyle();
+
+      favBtn.addEventListener('click', () => {
+        FavoriteManager.toggleFavorite(menuId);
+        updateFavBtnStyle();
+      });
+
+      if (shareRecipeBtn) {
+        shareRecipeBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(window.location.href)
+            .then(() => alert('레시피 링크가 클립보드에 복사되었습니다! 친구에게 공유해 보세요.'))
+            .catch(() => alert('링크 복사에 실패했습니다. 브라우저 주소창의 URL을 직접 복사해 주세요.'));
+        });
+      }
+    });
+  </script>
 </body>
 </html>

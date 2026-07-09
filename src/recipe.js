@@ -403,7 +403,7 @@ function initDetailPage(allMenus) {
   }
 
   // Pre-rendered 콘텐츠가 이미 있는지 확인
-  const isPrerendered = recipeBlogContainer && recipeBlogContainer.querySelector('.bg-slate-900') !== null;
+  const isPrerendered = recipeBlogContainer && (recipeBlogContainer.querySelector('.bg-slate-900') !== null || recipeBlogContainer.querySelector('.bg-slate-50') !== null);
 
   if (!isPrerendered && recipeBlogContainer) {
     // CSR: 상세 레시피 D열 포스팅 변환 및 노출

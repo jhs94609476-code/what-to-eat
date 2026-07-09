@@ -441,6 +441,51 @@ async function runBuild() {
       `<h3 class="text-xl font-extrabold text-white" id="recipeChefTitle">${menu.chefName} ${menu.name} 레시피</h3>`
     );
 
+    // 7) 다른 셰프 레시피 추천 리스트 정적 사전 생성
+    const otherRecipes = allMenus.filter(item => item.name === menu.name && item.id !== menu.id);
+    let otherChefsHtml = '';
+    if (otherRecipes.length === 0) {
+      // 다른 셰프 레시피가 전혀 없는 경우 섹션 숨김 처리
+      html = html.replace('id="otherChefsSection"', 'id="otherChefsSection" style="display: none;"');
+    } else {
+      otherRecipes.forEach(recipe => {
+        const catCode = categoryCodeMap[recipe.category] || 'what-to-eat-kr';
+        const cleanCatCode = catCode.trim().replace(/\s+/g, '-');
+        const cleanFoodName = recipe.name.trim().replace(/\s+/g, '-');
+        const cleanChefName = recipe.chefName.trim().replace(/\s+/g, '-');
+        const detailUrl = `/recipe/${cleanCatCode}-${cleanFoodName}-${cleanChefName}/`;
+
+        otherChefsHtml += `<a href="${detailUrl}" class="px-4 py-2.5 rounded-2xl border border-slate-800 hover:border-purple-500/50 bg-slate-900/40 hover:bg-purple-950/10 text-xs font-bold text-slate-300 hover:text-purple-300 transition-all duration-300">${recipe.chefName} 레시피 보러가기</a>\n`;
+      });
+      html = html.replace(
+        '<!-- Other chef link buttons will be dynamically generated here -->',
+        otherChefsHtml
+      );
+    }
+
+    // 8) 상단 카테고리 네비게이션 액티브 탭 하이라이트 정적 빌드
+    const reverseCategoryMap = {
+      '한식레시피 모음': 'korean',
+      '중식레시피 모음': 'chinese',
+      '양식레시피 모음': 'western',
+      '일식레시피 모음': 'japanese',
+      '반찬레시피 모음': 'side',
+      '식재료팁': 'tip'
+    };
+    const catType = reverseCategoryMap[menu.category] || 'korean';
+    const activeColorClass = catType === 'tip' ? 'text-emerald-400' : 'text-purple-400';
+    
+    const activeLinkPattern = new RegExp(`id="nav-${catType}"\\s+class="([^"]*)"`);
+    html = html.replace(activeLinkPattern, (match, classes) => {
+      const updatedClasses = classes
+        .replace('text-slate-400', activeColorClass)
+        .concat(' bg-slate-800/80 border border-slate-700/60 font-bold');
+      return `id="nav-${catType}" class="${updatedClasses}"`;
+    });
+
+    // 9) 찜 버튼에 고유 메뉴 ID 주입
+    html = html.replace('id="detailFavoriteBtn"', `id="detailFavoriteBtn" data-menu-id="${menu.id}"`);
+
     // index.html 정적 파일 쓰기
     fs.writeFileSync(path.join(pageDir, 'index.html'), html, 'utf-8');
     pagesCount++;
