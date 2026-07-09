@@ -31,47 +31,47 @@ const URLUtils = {
 
 // 카테고리 영문 코드를 국문으로 변환
 const categoryMap = {
-  korean: '한식',
-  chinese: '중식',
-  western: '양식',
-  japanese: '일식',
-  side: '반찬',
-  tip: '식재료 팁'
+  korean: '한식레시피 모음',
+  chinese: '중식레시피 모음',
+  western: '양식레시피 모음',
+  japanese: '일식레시피 모음',
+  side: '반찬레시피 모음',
+  tip: '식재료팁'
 };
 
 // 국문 카테고리를 영문 탭 아이디 코드로 매핑
 const reverseCategoryMap = {
-  '한식': 'korean',
-  '중식': 'chinese',
-  '양식': 'western',
-  '일식': 'japanese',
-  '반찬': 'side',
-  '식재료 팁': 'tip'
+  '한식레시피 모음': 'korean',
+  '중식레시피 모음': 'chinese',
+  '양식레시피 모음': 'western',
+  '일식레시피 모음': 'japanese',
+  '반찬레시피 모음': 'side',
+  '식재료팁': 'tip'
 };
 
 // 국문 카테고리를 스프레드시트 영문 카테고리 코드 매핑
 const categoryCodeMap = {
-  '한식': 'what-to-eat-kr',
-  '중식': 'what-to-eat-ch',
-  '양식': 'what-to-eat-western',
-  '일식': 'what-to-eat-jp',
-  '반찬': 'what-to-eat-si',
-  '식재료 팁': 'what-to-eat-ti'
+  '한식레시피 모음': 'what-to-eat-kr',
+  '중식레시피 모음': 'what-to-eat-ch',
+  '양식레시피 모음': 'what-to-eat-western',
+  '일식레시피 모음': 'what-to-eat-jp',
+  '반찬레시피 모음': 'what-to-eat-si',
+  '식재료팁': 'what-to-eat-ti'
 };
 
 // 스프레드시트 영문 카테고리 코드를 국문 카테고리로 매핑
 const reverseCategoryCodeMap = {
-  'what-to-eat-kr': '한식',
-  'what-to-eat-ch': '중식',
-  'what-to-eat-we': '양식',
-  'what-to-eat-western': '양식',
-  'what-to-eat-ja': '일식',
-  'what-to-eat-jp': '일식',
-  'what-to-eat-japanese': '일식',
-  'what-to-eat-si': '반찬',
-  'what-to-eat-side': '반찬',
-  'what-to-eat-ti': '식재료 팁',
-  'what-to-eat-tips': '식재료 팁'
+  'what-to-eat-kr': '한식레시피 모음',
+  'what-to-eat-ch': '중식레시피 모음',
+  'what-to-eat-we': '양식레시피 모음',
+  'what-to-eat-western': '양식레시피 모음',
+  'what-to-eat-ja': '일식레시피 모음',
+  'what-to-eat-jp': '일식레시피 모음',
+  'what-to-eat-japanese': '일식레시피 모음',
+  'what-to-eat-si': '반찬레시피 모음',
+  'what-to-eat-side': '반찬레시피 모음',
+  'what-to-eat-ti': '식재료팁',
+  'what-to-eat-tips': '식재료팁'
 };
 
 // 동적 URL 규칙 생성 함수
@@ -122,29 +122,29 @@ function formatBlogRecipe(text) {
       const headerTitle = headerMatch[1];
       const contentText = lines.slice(1).join('\n').trim();
       
-      let colorClass = 'text-purple-400';
+      let colorClass = 'text-purple-700';
       let icon = '🧺';
       
       if (headerTitle.includes('재료')) {
-        colorClass = 'text-purple-400';
+        colorClass = 'text-purple-700';
         icon = '🧺';
       } else if (headerTitle.includes('양념') || headerTitle.includes('소스') || headerTitle.includes('계량')) {
-        colorClass = 'text-pink-400';
+        colorClass = 'text-rose-600';
         icon = '🧪';
       } else if (headerTitle.includes('순서') || headerTitle.includes('과정') || headerTitle.includes('방법') || headerTitle.includes('레시피')) {
-        colorClass = 'text-orange-400';
+        colorClass = 'text-orange-600';
         icon = '👩‍🍳';
       } else if (headerTitle.includes('팁')) {
-        colorClass = 'text-emerald-400';
+        colorClass = 'text-emerald-700';
         icon = '💡';
       }
 
       html += `
-        <div class="bg-slate-900/50 border border-slate-800/80 rounded-[2rem] p-6 md:p-10 shadow-lg relative">
-          <h3 class="${colorClass} font-extrabold text-xl md:text-2xl flex items-center space-x-2.5 border-b border-slate-800/80 pb-4 mb-6">
+        <div class="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-6 md:p-10 shadow-xl relative text-slate-800">
+          <h3 class="${colorClass} font-black text-xl md:text-2xl flex items-center space-x-2.5 border-b border-slate-200 pb-4 mb-6">
             <span>${icon}</span><span>${headerTitle}</span>
           </h3>
-          <div class="text-slate-200 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-wrap tracking-wide">
+          <div class="whitespace-pre-wrap tracking-wide font-medium" style="font-size: 1.1rem; line-height: 1.8; color: #333333; padding: 0 0.5rem;">
             ${contentText}
           </div>
         </div>
@@ -153,8 +153,8 @@ function formatBlogRecipe(text) {
       const rawText = section.trim();
       if (rawText) {
         html += `
-          <div class="bg-slate-900/30 border border-slate-800/50 rounded-[2rem] p-6 md:p-10 shadow-lg">
-            <div class="text-slate-200 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-wrap tracking-wide">
+          <div class="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-6 md:p-10 shadow-xl text-slate-800">
+            <div class="whitespace-pre-wrap tracking-wide font-medium" style="font-size: 1.1rem; line-height: 1.8; color: #333333; padding: 0 0.5rem;">
               ${rawText}
             </div>
           </div>

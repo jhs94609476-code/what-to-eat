@@ -309,12 +309,12 @@ function updateFilteredMenus(keepExistingShuffle = false) {
       filtered = state.allMenus.filter(menu => FavoriteManager.isFavorite(menu.id));
     } else {
       const tabMap = {
-        korean: '한식',
-        chinese: '중식',
-        western: '양식',
-        japanese: '일식',
-        side: '반찬',
-        tip: '식재료 팁'
+        korean: '한식레시피 모음',
+        chinese: '중식레시피 모음',
+        western: '양식레시피 모음',
+        japanese: '일식레시피 모음',
+        side: '반찬레시피 모음',
+        tip: '식재료팁'
       };
       const categoryName = tabMap[state.activeTab];
       filtered = state.allMenus.filter(menu => menu.category === categoryName);
@@ -324,9 +324,11 @@ function updateFilteredMenus(keepExistingShuffle = false) {
     const checkedBoxes = Array.from(document.querySelectorAll('.category-checkbox:checked'));
     const checkedCategories = checkedBoxes.map(cb => cb.value);
 
-    // 식재료 팁은 정보 콘텐츠이므로 룰렛 추천 풀에서 제외하고 요리 카테고리만 필터링
+    // 반찬레시피 모음과 식재료팁은 룰렛 추천 후보군에서 제외 (순수 단품 메인 요리만 노출)
     filtered = state.allMenus.filter(menu => 
-      menu.category !== '식재료 팁' && checkedCategories.includes(menu.category)
+      menu.category !== '식재료팁' && 
+      menu.category !== '반찬레시피 모음' && 
+      checkedCategories.includes(menu.category)
     );
   }
   
@@ -472,45 +474,7 @@ function initEvents() {
     }
   });
 
-  // 헤더 탭 메뉴 클릭 이벤트 바인딩 (메인 화면에서 탭 변경 시 페이지 이동을 막고 필터 연동)
-  const navLinks = document.querySelectorAll('nav a');
-  navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault(); // 페이지 리다이렉트 방지
-      
-      if (state.isSpinning) return; // 룰렛 회전 중에는 필터 교체 금지
 
-      const id = link.id; // nav-korean, nav-chinese, etc.
-      const tabType = id.replace('nav-', '');
-
-      if (state.activeTab === tabType) {
-        // 동일한 탭 클릭 시 필터 해제 및 전체 체크박스 켜기
-        state.activeTab = 'all';
-        updateActiveTabUI('all');
-        const checkboxes = categoryFilterContainer.querySelectorAll('.category-checkbox');
-        checkboxes.forEach(cb => cb.checked = true);
-      } else {
-        state.activeTab = tabType;
-        updateActiveTabUI(tabType);
-
-        // 체크박스 동기화 (선택한 탭의 카테고리만 체크 활성화, 나머지는 해제)
-        const checkboxes = categoryFilterContainer.querySelectorAll('.category-checkbox');
-        const tabToCheckboxValue = {
-          korean: '한식',
-          chinese: '중식',
-          western: '양식',
-          japanese: '일식',
-          side: '반찬'
-        };
-        const activeCheckboxValue = tabToCheckboxValue[tabType];
-        checkboxes.forEach(cb => {
-          cb.checked = cb.value === activeCheckboxValue;
-        });
-      }
-
-      updateFilteredMenus();
-    });
-  });
 
   // 룰렛 음식 변경하기 버튼 바인딩
   const changeFoodBtn = document.getElementById('changeFoodBtn');

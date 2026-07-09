@@ -102,16 +102,16 @@
       </a>
       
       <!-- Nav Tabs -->
-      <nav class="flex items-center space-x-1 text-xs bg-slate-900/60 p-1 rounded-xl border border-slate-800 max-w-full overflow-x-auto no-scrollbar scroll-smooth">
-        <a href="category.html?type=korean" id="nav-korean" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">한식</a>
-        <a href="category.html?type=chinese" id="nav-chinese" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">중식</a>
-        <a href="category.html?type=western" id="nav-western" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">양식</a>
-        <a href="category.html?type=japanese" id="nav-japanese" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">일식</a>
-        <a href="category.html?type=side" id="nav-side" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">반찬</a>
-        <a href="category.html?type=tip" id="nav-tip" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-emerald-400 transition-all font-medium whitespace-nowrap">📝 식재료 팁</a>
-        <span class="w-[1px] h-4 bg-slate-800 mx-1 flex-shrink-0"></span>
-        <a href="category.html?type=favorite" id="nav-favorite" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-amber-400 transition-all font-semibold flex items-center space-x-1 whitespace-nowrap">
-          <span>⭐️</span><span>찜 목록</span>
+      <nav class="flex items-center space-x-2 text-xs bg-slate-900/60 p-1.5 rounded-2xl border border-slate-800 max-w-full overflow-x-auto no-scrollbar scroll-smooth">
+        <a href="category.html?type=korean" id="nav-korean" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.2rem] whitespace-nowrap">한식레시피 모음</a>
+        <a href="category.html?type=chinese" id="nav-chinese" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.2rem] whitespace-nowrap">중식레시피 모음</a>
+        <a href="category.html?type=western" id="nav-western" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.2rem] whitespace-nowrap">양식레시피 모음</a>
+        <a href="category.html?type=japanese" id="nav-japanese" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.2rem] whitespace-nowrap">일식레시피 모음</a>
+        <a href="category.html?type=side" id="nav-side" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white transition-all font-bold text-sm sm:text-[1.2rem] whitespace-nowrap">반찬레시피 모음</a>
+        <a href="category.html?type=tip" id="nav-tip" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-emerald-400 transition-all font-bold text-sm sm:text-[1.2rem] whitespace-nowrap">📝 식재료팁</a>
+        <span class="w-[1px] h-6 bg-slate-800 mx-1 flex-shrink-0"></span>
+        <a href="category.html?type=favorite" id="nav-favorite" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-amber-400 transition-all font-bold text-sm sm:text-[1.2rem] flex items-center space-x-1 whitespace-nowrap">
+          <span>⭐️</span><span>찜목록</span>
         </a>
       </nav>
 
@@ -149,6 +149,26 @@
       </button>
     </div>
 
+    <!-- Google AdSense Placeholder: 상단 광고 구역 -->
+    <div class="ad-slot-upper bg-slate-900/30 border border-slate-800/80 rounded-2xl p-4 text-center my-6 shadow-sm">
+      <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest block mb-1">Advertisement</span>
+      <!-- 구글 애드센스 광고 코드가 들어갈 자리입니다. 심사 승인 후 아래 주석을 풀고 코드를 삽입하세요 -->
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-xxxxxxxxxxxxxxxx"
+           data-ad-slot="xxxxxxxxxx"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+      -->
+      <div class="text-xs text-slate-400 font-medium py-3 border border-dashed border-slate-850 rounded-xl bg-slate-950/40">
+        💡 구글 추천 레시피 광고 공간 (상단)
+      </div>
+    </div>
+
     <!-- Blog-style Recipe Content -->
     <section class="space-y-6">
       <div class="flex items-center justify-between mb-4">
@@ -178,9 +198,10 @@
       </div>
     </section>
 
-    <!-- Google AdSense Placeholder -->
-    <div id="adSlotContainer" class="glassmorphism p-4 rounded-3xl text-center border border-slate-800/80 my-8">
-      <span class="text-[10px] text-slate-500 font-semibold uppercase tracking-widest block mb-2">Advertisement</span>
+    <!-- Google AdSense Placeholder: 하단 광고 구역 -->
+    <div class="ad-slot-lower bg-slate-900/30 border border-slate-800/80 rounded-2xl p-4 text-center my-6 shadow-sm">
+      <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest block mb-1">Advertisement</span>
+      <!-- 구글 애드센스 광고 코드가 들어갈 자리입니다. 심사 승인 후 아래 주석을 풀고 코드를 삽입하세요 -->
       <!--
       <ins class="adsbygoogle"
            style="display:block"
@@ -192,8 +213,8 @@
            (adsbygoogle = window.adsbygoogle || []).push({});
       </script>
       -->
-      <div class="h-20 bg-slate-900/40 border border-dashed border-slate-800/50 rounded-2xl flex items-center justify-center text-xs text-slate-500">
-        여기에 구글 애드센스 광고가 노출됩니다.
+      <div class="text-xs text-slate-400 font-medium py-3 border border-dashed border-slate-850 rounded-xl bg-slate-950/40">
+        💡 구글 추천 레시피 광고 공간 (하단)
       </div>
     </div>
 

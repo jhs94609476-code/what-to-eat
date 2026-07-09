@@ -6,28 +6,32 @@ const DIST_DIR = path.join(__dirname, 'dist');
 
 const SPREADSHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStAETGqwhy2ux_FQAzPeS_bPUu_pIk_F7n79vO7LKCgAZ1KYHnqJ37WX5c2Higqtzx8gG6HBq7zouS/pub?gid=0&single=true&output=csv';
 
+const SITE_DOMAIN = 'https://what-to-eat-roulette.vercel.app';
+
+
 const categoryCodeMap = {
-  '한식': 'what-to-eat-kr',
-  '중식': 'what-to-eat-ch',
-  '양식': 'what-to-eat-western',
-  '일식': 'what-to-eat-jp',
-  '반찬': 'what-to-eat-si',
-  '식재료 팁': 'what-to-eat-ti'
+  '한식레시피 모음': 'what-to-eat-kr',
+  '중식레시피 모음': 'what-to-eat-ch',
+  '양식레시피 모음': 'what-to-eat-western',
+  '일식레시피 모음': 'what-to-eat-jp',
+  '반찬레시피 모음': 'what-to-eat-si',
+  '식재료팁': 'what-to-eat-ti'
 };
 
 const reverseCategoryCodeMap = {
-  'what-to-eat-kr': '한식',
-  'what-to-eat-ch': '중식',
-  'what-to-eat-we': '양식',
-  'what-to-eat-western': '양식',
-  'what-to-eat-ja': '일식',
-  'what-to-eat-jp': '일식',
-  'what-to-eat-japanese': '일식',
-  'what-to-eat-si': '반찬',
-  'what-to-eat-side': '반찬',
-  'what-to-eat-ti': '식재료 팁',
-  'what-to-eat-tips': '식재료 팁'
+  'what-to-eat-kr': '한식레시피 모음',
+  'what-to-eat-ch': '중식레시피 모음',
+  'what-to-eat-we': '양식레시피 모음',
+  'what-to-eat-western': '양식레시피 모음',
+  'what-to-eat-ja': '일식레시피 모음',
+  'what-to-eat-jp': '일식레시피 모음',
+  'what-to-eat-japanese': '일식레시피 모음',
+  'what-to-eat-si': '반찬레시피 모음',
+  'what-to-eat-side': '반찬레시피 모음',
+  'what-to-eat-ti': '식재료팁',
+  'what-to-eat-tips': '식재료팁'
 };
+
 
 const foodImageKeywordMap = {
   '제육볶음': 'https://images.unsplash.com/photo-1664978735390-ea4f2e519280?auto=format&fit=crop&q=80&w=800',
@@ -250,29 +254,29 @@ function formatBlogRecipe(text) {
       const headerTitle = headerMatch[1];
       const contentText = lines.slice(1).join('\n').trim();
       
-      let colorClass = 'text-purple-400';
+      let colorClass = 'text-purple-700';
       let icon = '🧺';
       
       if (headerTitle.includes('재료')) {
-        colorClass = 'text-purple-400';
+        colorClass = 'text-purple-700';
         icon = '🧺';
       } else if (headerTitle.includes('양념') || headerTitle.includes('소스') || headerTitle.includes('계량')) {
-        colorClass = 'text-pink-400';
+        colorClass = 'text-rose-600';
         icon = '🧪';
       } else if (headerTitle.includes('순서') || headerTitle.includes('과정') || headerTitle.includes('방법') || headerTitle.includes('레시피')) {
-        colorClass = 'text-orange-400';
+        colorClass = 'text-orange-600';
         icon = '👩‍🍳';
       } else if (headerTitle.includes('팁')) {
-        colorClass = 'text-emerald-400';
+        colorClass = 'text-emerald-700';
         icon = '💡';
       }
 
       html += `
-        <div class="bg-slate-900/50 border border-slate-800/80 rounded-[2rem] p-6 md:p-10 shadow-lg relative">
-          <h3 class="${colorClass} font-extrabold text-xl md:text-2xl flex items-center space-x-2.5 border-b border-slate-800/80 pb-4 mb-6">
+        <div class="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-6 md:p-10 shadow-xl relative text-slate-800">
+          <h3 class="${colorClass} font-black text-xl md:text-2xl flex items-center space-x-2.5 border-b border-slate-200 pb-4 mb-6">
             <span>${icon}</span><span>${headerTitle}</span>
           </h3>
-          <div class="text-slate-200 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-wrap tracking-wide">
+          <div class="whitespace-pre-wrap tracking-wide font-medium" style="font-size: 1.1rem; line-height: 1.8; color: #333333; padding: 0 0.5rem;">
             ${contentText}
           </div>
         </div>
@@ -281,8 +285,8 @@ function formatBlogRecipe(text) {
       const rawText = section.trim();
       if (rawText) {
         html += `
-          <div class="bg-slate-900/30 border border-slate-800/50 rounded-[2rem] p-6 md:p-10 shadow-lg">
-            <div class="text-slate-200 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-wrap tracking-wide">
+          <div class="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-6 md:p-10 shadow-xl text-slate-800">
+            <div class="whitespace-pre-wrap tracking-wide font-medium" style="font-size: 1.1rem; line-height: 1.8; color: #333333; padding: 0 0.5rem;">
               ${rawText}
             </div>
           </div>
@@ -389,14 +393,27 @@ async function runBuild() {
     let html = detailHtmlTemplate;
 
     // 1) SEO Meta 바인딩
-    const title = `${menu.name} - ${menu.chefName} 황금 레시피 | 오늘 뭐 먹지?`.replace(/"/g, "'");
-    const cleanDesc = menu.description.replace(/"/g, "'").replace(/\n/g, ' ');
-    const description = `${menu.name} - ${menu.chefName}의 추천 레시피 가이드: ${cleanDesc.substring(0, 140)}...`;
+    const titleText = `${menu.name} 황금 레시피 모음 - ${menu.chefName} | 맛있는 레시피 포털`.replace(/"/g, "'");
+    const descText = `${menu.category} 추천 메뉴! ${menu.chefName}의 ${menu.name} 레시피 정보입니다. 재료와 조리 방법을 확인하고 오늘 맛있는 한 끼를 요리해 보세요.`.replace(/"/g, "'").replace(/\n/g, ' ');
 
-    html = html.replace('<title>요리 상세 레시피 - 오늘 뭐 먹지?</title>', `<title>${title}</title>`);
+    html = html.replace('<title>요리 상세 레시피 - 오늘 뭐 먹지?</title>', `<title>${titleText}</title>`);
+    
+    const metaReplacement = `<meta name="description" content="${descText}">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="${titleText}">
+  <meta property="og:description" content="${descText}">
+  <meta property="og:image" content="${menu.image}">
+  <meta property="og:url" content="${SITE_DOMAIN}/recipe/${cleanCat}-${cleanFood}-${cleanChef}/">
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="${titleText}">
+  <meta property="twitter:description" content="${descText}">
+  <meta property="twitter:image" content="${menu.image}">`;
+
     html = html.replace(
-      'content="상세한 셰프별 황금 레시피와 재료, 조리 순서 정보를 확인하세요."',
-      `content="${description}"`
+      /<meta name="description" content="[^"]*">/,
+      metaReplacement
     );
 
     // 2) 요리 기본 정보 주입
@@ -428,6 +445,49 @@ async function runBuild() {
     fs.writeFileSync(path.join(pageDir, 'index.html'), html, 'utf-8');
     pagesCount++;
   });
+
+  // 6단계: sitemap.xml 자동 생성
+  console.log('📄 sitemap.xml 자동 생성 중...');
+  let sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${SITE_DOMAIN}/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${SITE_DOMAIN}/index.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+`;
+
+  allMenus.forEach((menu) => {
+    const catCode = categoryCodeMap[menu.category] || menu.category;
+    const cleanCat = catCode.trim().replace(/\s+/g, '-');
+    const cleanFood = menu.name.trim().replace(/\s+/g, '-');
+    const cleanChef = menu.chefName.trim().replace(/\s+/g, '-');
+    const pathName = `recipe/${cleanCat}-${cleanFood}-${cleanChef}/`;
+    
+    sitemapContent += `  <url>
+    <loc>${SITE_DOMAIN}/${pathName}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>\n`;
+  });
+
+  sitemapContent += `</urlset>`;
+  fs.writeFileSync(path.join(DIST_DIR, 'sitemap.xml'), sitemapContent, 'utf-8');
+  console.log('✅ sitemap.xml 생성 완료.');
+
+  // 7단계: robots.txt 자동 생성
+  console.log('🤖 robots.txt 자동 생성 중...');
+  const robotsContent = `User-agent: *
+Allow: /
+Sitemap: ${SITE_DOMAIN}/sitemap.xml
+`;
+  fs.writeFileSync(path.join(DIST_DIR, 'robots.txt'), robotsContent, 'utf-8');
+  console.log('✅ robots.txt 생성 완료.');
 
   console.log(`✨ 빌드가 완료되었습니다! 총 ${pagesCount}개의 레시피 정적 상세 페이지가 성공적으로 구워졌습니다.`);
 }
