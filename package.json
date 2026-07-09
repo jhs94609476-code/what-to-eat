@@ -1,0 +1,9 @@
+{
+  "name": "what-to-eat",
+  "version": "1.0.0",
+  "description": "Menu recommendation roulette and recipe app",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오늘 뭐 먹지? - 카테고리별 음식 추천 룰렛 & 레시피</title>
+  <meta name="description" content="결정 장애를 단번에 해결해 줄 음식 추천 룰렛! 한식, 중식, 양식, 일식, 반찬을 필터링하여 돌리고 상세한 레시피와 간편 장보기 정보까지 한눈에 확인하세요.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts (Outfit & Noto Sans KR) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Noto Sans KR', 'sans-serif'],
+            outfit: ['Outfit', 'sans-serif'],
+          },
+          boxShadow: {
+            'neon-purple': '0 0 20px rgba(168, 85, 247, 0.4)',
+            'neon-emerald': '0 0 20px rgba(16, 185, 129, 0.4)',
+            'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* Glassmorphism utility */
+    .glassmorphism {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-zinc-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-purple-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/60 sticky top-0 z-40 backdrop-blur-md bg-slate-950/80">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
+      <div class="flex items-center space-x-3 self-start md:self-auto">
+        <div class="bg-gradient-to-tr from-purple-600 to-pink-500 p-2.5 rounded-2xl shadow-neon-purple animate-pulse">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-11.314l.707.707m11.314 11.314l.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-black tracking-tight font-outfit bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent">
+            WHAT TO EAT
+          </h1>
+          <p class="text-xs text-slate-400 font-medium">오늘의 메뉴 추천 룰렛</p>
+        </div>
+      </div>
+      
+      <!-- Nav Tabs -->
+      <nav class="flex items-center space-x-1 text-xs bg-slate-900/60 p-1 rounded-xl border border-slate-800 max-w-full overflow-x-auto no-scrollbar scroll-smooth">
+        <a href="category.html?type=korean" id="nav-korean" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">한식</a>
+        <a href="category.html?type=chinese" id="nav-chinese" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">중식</a>
+        <a href="category.html?type=western" id="nav-western" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">양식</a>
+        <a href="category.html?type=japanese" id="nav-japanese" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">일식</a>
+        <a href="category.html?type=side" id="nav-side" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">반찬</a>
+        <a href="category.html?type=tip" id="nav-tip" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-emerald-400 transition-all font-medium whitespace-nowrap">📝 식재료 팁</a>
+        <span class="w-[1px] h-4 bg-slate-800 mx-1 flex-shrink-0"></span>
+        <a href="category.html?type=favorite" id="nav-favorite" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-amber-400 transition-all font-semibold flex items-center space-x-1 whitespace-nowrap">
+          <span>⭐️</span><span>찜 목록</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8 flex flex-col items-center justify-center">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full items-start">
+      
+      <!-- Left: Filter Controls (4 cols on lg) -->
+      <section class="lg:col-span-5 w-full glassmorphism p-6 rounded-3xl shadow-glass flex flex-col space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+            카테고리 선택
+          </h2>
+          <p class="text-sm text-slate-400 mt-1">원치 않는 메뉴 종류는 체크 해제해 주세요.</p>
+        </div>
+
+        <!-- Filter Checkboxes -->
+        <div class="grid grid-cols-2 gap-3" id="categoryFilterContainer">
+          <!-- Han-sik -->
+          <label class="relative flex items-center justify-between p-4 rounded-2xl border border-slate-700/50 cursor-pointer select-none bg-slate-800/30 transition-all hover:bg-slate-800/50 hover:border-purple-500/50 group">
+            <span class="text-base font-semibold group-hover:text-purple-300 transition-colors">한식</span>
+            <input type="checkbox" value="한식" checked class="category-checkbox w-5 h-5 rounded-lg border-slate-700 text-purple-600 focus:ring-purple-500 focus:ring-offset-slate-900 bg-slate-900 cursor-pointer accent-purple-500">
+          </label>
+          <!-- Jung-sik -->
+          <label class="relative flex items-center justify-between p-4 rounded-2xl border border-slate-700/50 cursor-pointer select-none bg-slate-800/30 transition-all hover:bg-slate-800/50 hover:border-purple-500/50 group">
+            <span class="text-base font-semibold group-hover:text-purple-300 transition-colors">중식</span>
+            <input type="checkbox" value="중식" checked class="category-checkbox w-5 h-5 rounded-lg border-slate-700 text-purple-600 focus:ring-purple-500 focus:ring-offset-slate-900 bg-slate-900 cursor-pointer accent-purple-500">
+          </label>
+          <!-- Yang-sik -->
+          <label class="relative flex items-center justify-between p-4 rounded-2xl border border-slate-700/50 cursor-pointer select-none bg-slate-800/30 transition-all hover:bg-slate-800/50 hover:border-purple-500/50 group">
+            <span class="text-base font-semibold group-hover:text-purple-300 transition-colors">양식</span>
+            <input type="checkbox" value="양식" checked class="category-checkbox w-5 h-5 rounded-lg border-slate-700 text-purple-600 focus:ring-purple-500 focus:ring-offset-slate-900 bg-slate-900 cursor-pointer accent-purple-500">
+          </label>
+          <!-- Il-sik -->
+          <label class="relative flex items-center justify-between p-4 rounded-2xl border border-slate-700/50 cursor-pointer select-none bg-slate-800/30 transition-all hover:bg-slate-800/50 hover:border-purple-500/50 group">
+            <span class="text-base font-semibold group-hover:text-purple-300 transition-colors">일식</span>
+            <input type="checkbox" value="일식" checked class="category-checkbox w-5 h-5 rounded-lg border-slate-700 text-purple-600 focus:ring-purple-500 focus:ring-offset-slate-900 bg-slate-900 cursor-pointer accent-purple-500">
+          </label>
+          <!-- Ban-chan -->
+          <label class="relative flex items-center justify-between p-4 rounded-2xl border border-slate-700/50 cursor-pointer select-none bg-slate-800/30 transition-all hover:bg-slate-800/50 hover:border-purple-500/50 col-span-2 group">
+            <span class="text-base font-semibold group-hover:text-purple-300 transition-colors">반찬 / 가정식</span>
+            <input type="checkbox" value="반찬" checked class="category-checkbox w-5 h-5 rounded-lg border-slate-700 text-purple-600 focus:ring-purple-500 focus:ring-offset-slate-900 bg-slate-900 cursor-pointer accent-purple-500">
+          </label>
+        </div>
+
+        <!-- Selected Count / Warning -->
+        <div id="selectionStatus" class="p-4 rounded-2xl bg-purple-950/20 border border-purple-800/30 text-xs text-purple-300/90 leading-relaxed">
+          선택된 카테고리의 총 메뉴 개수: <span id="activeMenuCount" class="font-bold text-purple-200">0</span>개
+        </div>
+      </section>
+
+      <!-- Right: Roulette Canvas Area (7 cols on lg) -->
+      <section class="lg:col-span-7 w-full flex flex-col items-center justify-center py-4">
+        
+        <!-- Roulette Frame Wrapper (Relative for overlay elements) -->
+        <div class="relative w-[340px] h-[340px] xs:w-[380px] xs:h-[380px] sm:w-[420px] sm:h-[420px] flex items-center justify-center">
+          
+          <!-- Outer Neon Border Frame -->
+          <div class="absolute inset-0 rounded-full border-4 border-slate-800/80 shadow-neon-purple bg-slate-900/60 p-2"></div>
+          
+          <!-- Outer LED Lights Ring (Pure CSS decoration) -->
+          <div class="absolute inset-3 rounded-full border border-dashed border-purple-500/40 animate-[spin_60s_linear_infinite]"></div>
+
+          <!-- Canvas Roulette -->
+          <canvas id="rouletteCanvas" width="400" height="400" class="relative z-10 w-[94%] h-[94%] rounded-full"></canvas>
+          
+          <!-- Outer Arrow Indicator (12 o'clock pointer) -->
+          <div class="absolute top-[-10px] left-1/2 -translate-x-1/2 z-20 transition-transform duration-75 origin-top" id="pointerArrow">
+            <svg width="32" height="36" viewBox="0 0 32 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 36L32 12H21.5V0H10.5V12H0L16 36Z" fill="url(#grad)" filter="url(#glow)"/>
+              <defs>
+                <linearGradient id="grad" x1="16" y1="0" x2="16" y2="36" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#EC4899"/>
+                  <stop offset="1" stop-color="#8B5CF6"/>
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+            </svg>
+          </div>
+
+          <!-- Center Pin Design (Non-rotating) -->
+          <div class="absolute z-20 bg-slate-950 border-4 border-purple-500 rounded-full w-14 h-14 flex items-center justify-center shadow-lg shadow-purple-500/30">
+            <div class="w-4 h-4 bg-pink-500 rounded-full animate-ping"></div>
+            <div class="absolute w-6 h-6 bg-pink-500 rounded-full opacity-60"></div>
+          </div>
+        </div>
+
+        <!-- Spin Trigger Button -->
+        <button id="spinBtn" class="mt-8 px-10 py-4 rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white font-extrabold text-lg shadow-lg shadow-purple-500/25 hover:shadow-neon-purple hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 select-none tracking-wider disabled:opacity-50 disabled:cursor-not-allowed">
+          오늘의 메뉴 추천 받기!
+        </button>
+
+        <!-- Control Buttons -->
+        <div class="flex items-center space-x-3 mt-5">
+          <button id="changeFoodBtn" class="px-4 py-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/60 hover:border-purple-500/40 text-purple-300 hover:text-purple-200 font-bold text-xs transition-all flex items-center space-x-1.5 shadow-md active:scale-95 select-none disabled:opacity-50 disabled:cursor-not-allowed">
+            <span>🔄 룰렛 음식 변경하기</span>
+          </button>
+          <button id="resetBtn" class="px-4 py-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/60 hover:border-pink-500/40 text-pink-300 hover:text-pink-200 font-bold text-xs transition-all flex items-center space-x-1.5 shadow-md active:scale-95 select-none disabled:opacity-50 disabled:cursor-not-allowed">
+            <span>🧹 리셋하기</span>
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Winner Modal (Hidden by default) -->
+  <div id="resultModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-gradient-to-b from-slate-900 to-zinc-900 border border-slate-800 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="modalCard">
+      
+      <!-- Banner/Image -->
+      <div class="relative h-48 w-full bg-slate-800">
+        <img id="winnerImage" src="" alt="음식 이미지" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/30 to-transparent"></div>
+        <button id="closeModalBtnTop" class="absolute top-4 right-4 bg-slate-950/60 p-2 rounded-full hover:bg-slate-950 text-slate-300 hover:text-white transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+        <span id="winnerCategory" class="absolute bottom-4 left-4 px-3 py-1 text-xs font-bold rounded-full bg-purple-500/90 text-white shadow-neon-purple">
+          카테고리
+        </span>
+      </div>
+
+      <!-- Content -->
+      <div class="p-6 space-y-4">
+        <div>
+          <p class="text-xs text-slate-400 font-bold tracking-widest uppercase">축하합니다! 오늘 당첨된 메뉴는?</p>
+          <h3 id="winnerName" class="text-3xl font-extrabold text-white mt-1 bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 bg-clip-text text-transparent">
+            제육볶음
+          </h3>
+          <p id="winnerDescription" class="text-sm text-slate-300 mt-2 leading-relaxed">
+            매콤달콤한 돼지고기 요리
+          </p>
+        </div>
+
+        <!-- Divider -->
+        <hr class="border-slate-800">
+
+        <!-- Action Buttons (UI Structure) -->
+        <div class="flex flex-col gap-3">
+          <button id="viewRecipeBtn" class="w-full py-3.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm transition-all flex items-center justify-center space-x-2 shadow-lg shadow-purple-900/30 hover:scale-[1.01]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+            <span>레시피 보러 가기</span>
+          </button>
+          
+          <button id="shareKakaoBtn" class="w-full py-3.5 px-4 rounded-xl bg-[#FEE500] hover:bg-[#FDD835] text-slate-900 font-extrabold text-sm transition-all flex items-center justify-center space-x-2 hover:scale-[1.01]">
+            <svg class="w-5 h-5 fill-slate-900" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3c-4.97 0-9 3.185-9 7.115 0 2.53 1.685 4.753 4.22 5.968-.175.642-.63 2.316-.72 2.664-.112.433.155.428.326.314.135-.09 2.146-1.458 3.003-2.04.707.198 1.45.308 2.17.308 4.97 0 9-3.185 9-7.115S16.97 3 12 3z"/>
+            </svg>
+            <span>카카오톡으로 결과 공유하기</span>
+          </button>
+
+          <button id="closeModalBtn" class="w-full py-3.5 px-4 rounded-xl border border-slate-700 hover:bg-slate-800 text-slate-300 font-bold text-sm transition-colors mt-1">
+            닫기
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/40 bg-slate-950/60 py-6 mt-12 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 space-y-2">
+      <p>© 2026 What-To-Eat. All rights reserved.</p>
+      <p class="text-slate-600">※ 본 서비스의 일부 링크는 쿠팡 파트너스 활동의 일환으로 소정의 수수료를 제공받을 수 있습니다.</p>
+    </div>
+  </footer>
+
+  <!-- Web App Logic -->
+  <script src="sheets.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

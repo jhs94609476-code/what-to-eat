@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오야꼬동 - 쿡피아 황금 레시피 | 오늘 뭐 먹지?</title>
+  <meta name="description" content="오야꼬동 - 쿡피아의 추천 레시피 가이드: [신선한 기본 재료 (1인분 기준)] - 밥: 1공기 - 닭정육 (닭다리살순살): 2개 - 양파: 1/4개 - 대파 송송 썬 것: 1/4컵 - 달걀: 2개 - 식용유, 깻가루: 약간씩  [양념 및 소스 계량] - 진간장: 2큰술 - ...">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts (Outfit & Noto Sans KR) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Noto Sans KR', 'sans-serif'],
+            outfit: ['Outfit', 'sans-serif'],
+          },
+          boxShadow: {
+            'neon-purple': '0 0 20px rgba(168, 85, 247, 0.25)',
+            'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+            'paper': '0 4px 12px rgba(0,0,0,0.1)',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* Glassmorphism utility */
+    .glassmorphism {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Memo Note paper lines design */
+    .paper-lines {
+      background-image: linear-gradient(#e2e8f0 1px, transparent 1px);
+      background-size: 100% 2.25rem;
+      line-height: 2.25rem;
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+    }
+    .paper-lines li {
+      margin-bottom: 0px !important;
+      padding-top: 0px !important;
+      padding-bottom: 0px !important;
+      min-height: 2.25rem;
+      display: flex;
+      align-items: flex-start;
+    }
+    .paper-lines li > span:last-child {
+      padding-top: 0.5rem;
+      line-height: 1.25rem;
+      display: inline-block;
+    }
+    .paper-lines li > span:first-child {
+      margin-top: 0.45rem;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-zinc-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-purple-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/60 sticky top-0 z-40 backdrop-blur-md bg-slate-950/80">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
+      <a href="index.html" class="flex items-center space-x-3 group self-start md:self-auto">
+        <div class="bg-slate-800/80 p-2.5 rounded-2xl border border-slate-700/50 group-hover:border-purple-500/50 transition-colors">
+          <svg class="w-5 h-5 text-slate-300 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-black tracking-tight font-outfit bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            WHAT TO EAT
+          </h1>
+          <p class="text-xs text-slate-400 font-medium">홈으로 돌아가기</p>
+        </div>
+      </a>
+      
+      <!-- Nav Tabs -->
+      <nav class="flex items-center space-x-1 text-xs bg-slate-900/60 p-1 rounded-xl border border-slate-800 max-w-full overflow-x-auto no-scrollbar scroll-smooth">
+        <a href="category.html?type=korean" id="nav-korean" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">한식</a>
+        <a href="category.html?type=chinese" id="nav-chinese" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">중식</a>
+        <a href="category.html?type=western" id="nav-western" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">양식</a>
+        <a href="category.html?type=japanese" id="nav-japanese" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">일식</a>
+        <a href="category.html?type=side" id="nav-side" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all font-medium whitespace-nowrap">반찬</a>
+        <a href="category.html?type=tip" id="nav-tip" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-emerald-400 transition-all font-medium whitespace-nowrap">📝 식재료 팁</a>
+        <span class="w-[1px] h-4 bg-slate-800 mx-1 flex-shrink-0"></span>
+        <a href="category.html?type=favorite" id="nav-favorite" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-amber-400 transition-all font-semibold flex items-center space-x-1 whitespace-nowrap">
+          <span>⭐️</span><span>찜 목록</span>
+        </a>
+      </nav>
+
+      <!-- Back Link -->
+      <button onclick="history.back()" class="text-sm font-semibold text-slate-300 hover:text-white flex items-center space-x-1 hidden md:flex">
+        <span>뒤로 가기</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-3xl w-full mx-auto px-4 py-8">
+    
+    <!-- Dish Hero Banner Card -->
+    <div class="relative w-full h-64 rounded-3xl overflow-hidden shadow-2xl mb-8 border border-slate-800/80" id="dishHeroBanner">
+      <img id="dishImage" src="https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&q=80&w=800" alt="오야꼬동" class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent"></div>
+      
+      <!-- Dynamic Title info inside Hero -->
+      <div class="absolute bottom-6 left-6 right-6">
+        <span id="dishCategory" class="px-3 py-1 text-xs font-bold rounded-full bg-purple-500 text-white shadow-neon-purple">일식</span>
+        <h2 id="dishName" class="text-3xl sm:text-4xl font-extrabold text-white mt-2 drop-shadow-md">오야꼬동</h2>
+        <p id="dishDescription" class="text-slate-200 text-sm mt-1 max-w-xl drop-shadow">[신선한 기본 재료 (1인분 기준)]</p>
+      </div>
+
+      <!-- Favorite Button on Hero Top Right -->
+      <button id="detailFavoriteBtn" class="absolute top-6 right-6 bg-slate-950/60 hover:bg-slate-950/80 p-3 rounded-2xl border border-slate-700/40 text-slate-300 text-xl transition-all select-none">
+        ☆
+      </button>
+    </div>
+
+    <!-- Blog-style Recipe Content -->
+    <section class="space-y-6">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center space-x-2">
+          <span class="text-xl">👩‍🍳</span>
+          <h3 class="text-xl font-extrabold text-white" id="recipeChefTitle">쿡피아 오야꼬동 레시피</h3>
+        </div>
+      </div>
+
+      <!-- Blog Content Container -->
+      <div id="recipeBlogContainer" class="space-y-6"><div class="space-y-10">
+        <div class="bg-slate-900/50 border border-slate-800/80 rounded-[2rem] p-6 md:p-10 shadow-lg relative">
+          <h3 class="text-purple-400 font-extrabold text-xl md:text-2xl flex items-center space-x-2.5 border-b border-slate-800/80 pb-4 mb-6">
+            <span>🧺</span><span>신선한 기본 재료 (1인분 기준)</span>
+          </h3>
+          <div class="text-slate-200 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-wrap tracking-wide">
+            - 밥: 1공기
+- 닭정육 (닭다리살순살): 2개
+- 양파: 1/4개
+- 대파 송송 썬 것: 1/4컵
+- 달걀: 2개
+- 식용유, 깻가루: 약간씩
+          </div>
+        </div>
+      
+        <div class="bg-slate-900/50 border border-slate-800/80 rounded-[2rem] p-6 md:p-10 shadow-lg relative">
+          <h3 class="text-pink-400 font-extrabold text-xl md:text-2xl flex items-center space-x-2.5 border-b border-slate-800/80 pb-4 mb-6">
+            <span>🧪</span><span>양념 및 소스 계량</span>
+          </h3>
+          <div class="text-slate-200 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-wrap tracking-wide">
+            - 진간장: 2큰술
+- 설탕: 1큰술
+- 맛술: 1큰술
+- 물: 1/4컵 (약 45~50ml)
+          </div>
+        </div>
+      
+        <div class="bg-slate-900/50 border border-slate-800/80 rounded-[2rem] p-6 md:p-10 shadow-lg relative">
+          <h3 class="text-orange-400 font-extrabold text-xl md:text-2xl flex items-center space-x-2.5 border-b border-slate-800/80 pb-4 mb-6">
+            <span>👩‍🍳</span><span>깔끔 명쾌한 10분 조리 순서</span>
+          </h3>
+          <div class="text-slate-200 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-wrap tracking-wide">
+            1. 야채 및 달걀 준비: 양파 1/4개는 채 썰고, 대파는 송송 썰어 종이컵 1/4컵 분량으로 맞춥니다. 달걀 2개는 볼에 깨뜨려 흰자와 노른자가 대충 섞이도록 가볍게만 풀어 둡니다.
+2. 닭고기 손질 및 소스 배합: 닭정육 2개를 흐르는 물에 가볍게 씻어 물기를 닦아낸 뒤 먹기 좋은 크기로 썰어 줍니다. 별도의 그릇에 진간장 2큰술, 설탕 1큰술, 맛술 1큰술, 물 1/4컵을 넣고 저어 설탕을 녹여 줍니다.
+3. 고기 초벌 볶기: 팬에 식용유를 살짝 두르고 손질한 닭고기와 채 썬 양파를 함께 넣어 중불에서 달달 볶아줍니다. 양파의 단맛과 닭고기의 고소한 향이 어우러지게 하는 과정입니다.
+4. 소스 조림과 계란 안착: 닭고기가 겉면 기준 반쯤 익어가면 준비해 둔 소스를 팬에 싹 부어줍니다. 소스가 자작하게 끓으며 닭고기가 완전히 익을 때까지 보글보글 조려줍니다. 고기가 다 익으면 풀어둔 달걀물을 팬 전체에 원을 그리듯 부어줍니다. 달걀이 부드러운 반숙 상태로 촉촉하게 굳으면 불을 끕니다. 그릇에 밥을 담고 조리된 재료를 조심스레 부어준 뒤 송송 썬 대파와 깻가루를 솔솔 뿌려 마무리합니다.
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Other Chefs Recommendation List -->
+    <section class="mt-10 border-t border-slate-900 pt-8" id="otherChefsSection">
+      <h4 class="text-sm font-bold text-slate-400 mb-4 flex items-center space-x-1.5">
+        <span>⭐️</span><span>이 음식의 다른 셰프 레시피 보기</span>
+      </h4>
+      <div id="otherChefsContainer" class="flex flex-wrap gap-3">
+        <!-- Other chef link buttons will be dynamically generated here -->
+      </div>
+    </section>
+
+    <!-- Google AdSense Placeholder -->
+    <div id="adSlotContainer" class="glassmorphism p-4 rounded-3xl text-center border border-slate-800/80 my-8">
+      <span class="text-[10px] text-slate-500 font-semibold uppercase tracking-widest block mb-2">Advertisement</span>
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-xxxxxxxxxxxxxxxx"
+           data-ad-slot="xxxxxxxxxx"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+      -->
+      <div class="h-20 bg-slate-900/40 border border-dashed border-slate-800/50 rounded-2xl flex items-center justify-center text-xs text-slate-500">
+        여기에 구글 애드센스 광고가 노출됩니다.
+      </div>
+    </div>
+
+    <!-- Bottom Actions Area -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+      <!-- Related Video Search Link -->
+      <a id="watchVideoBtn" href="https://www.youtube.com/watch?v=EHOH7j9VDk8" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center space-x-3 p-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-extrabold text-sm transition-all hover:scale-[1.01] shadow-lg shadow-red-900/20">
+        <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+        <span>오피셜 영상 보러가기 🎬</span>
+      </a>
+
+      <!-- Share Recipe Link -->
+      <button id="shareRecipeBtn" class="flex items-center justify-center space-x-3 p-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-extrabold text-sm transition-all hover:scale-[1.01] shadow-lg shadow-orange-900/20">
+        <svg class="w-6 h-6 fill-none stroke-white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+          <polyline points="16 6 12 2 8 6"></polyline>
+          <line x1="12" y1="2" x2="12" y2="15"></line>
+        </svg>
+        <span>🔗 레시피 공유하기</span>
+      </button>
+
+      <!-- Coupang Partners Link -->
+      <a id="buyIngredientsBtn" href="https://www.coupang.com/np/search?q=%EC%98%A4%EC%95%BC%EA%BC%AC%EB%8F%99%20%EB%B0%80%ED%82%A4%ED%8A%B8" target="_blank" class="flex items-center justify-center space-x-3 p-4 rounded-2xl bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-extrabold text-sm transition-all hover:scale-[1.01] shadow-lg shadow-indigo-900/20">
+        <svg class="w-6 h-6 fill-none stroke-white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span>🛒 쿠팡 밀키트 장보기</span>
+      </a>
+    </section>
+  </main>
+  <!-- YouTube Video Lightbox Modal (Hidden by default) -->
+  <div id="videoModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-zinc-950 border border-slate-800 rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 relative" id="videoModalCard">
+      <!-- Close Button -->
+      <button id="closeVideoModalBtn" class="absolute top-4 right-4 bg-slate-950/70 p-2.5 rounded-full hover:bg-slate-900 text-slate-300 hover:text-white transition-colors z-10 border border-slate-800/80">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      
+      <!-- Video Container -->
+      <div class="relative w-full pb-[56.25%] bg-black">
+        <iframe id="videoPlayerIframe" class="absolute top-0 left-0 w-full h-full border-0" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/40 bg-slate-950/60 py-6 mt-12 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 space-y-2">
+      <p>© 2026 What-To-Eat. All rights reserved.</p>
+      <p class="text-slate-600">※ 본 서비스의 일부 링크는 쿠팡 파트너스 활동의 일환으로 소정의 수수료를 제공받을 수 있습니다.</p>
+    </div>
+  </footer>
+
+  <!-- Web App Logic -->
+  <script src="sheets.js"></script>
+  <script src="recipe.js"></script>
+</body>
+</html>

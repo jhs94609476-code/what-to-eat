@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>셰프 선택 - 오늘 뭐 먹지?</title>
+  <meta name="description" content="원하시는 셰프의 스타일을 선택하여 맞춤형 황금 레시피와 요리 순서를 확인해 보세요.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts (Outfit & Noto Sans KR) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Noto Sans KR', 'sans-serif'],
+            outfit: ['Outfit', 'sans-serif'],
+          },
+          boxShadow: {
+            'neon-purple': '0 0 20px rgba(168, 85, 247, 0.25)',
+            'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* Glassmorphism utility */
+    .glassmorphism {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 font-sans text-slate-100 min-h-screen flex flex-col selection:bg-purple-500/30 selection:text-purple-300">
+
+  <!-- Background Decorative Blurs -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-purple-900/20 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/2 -right-40 w-96 h-96 bg-pink-900/10 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Header Nav -->
+  <header class="sticky top-0 z-40 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center space-x-2 font-outfit">
+        <span class="bg-gradient-to-tr from-purple-500 to-pink-500 text-white rounded-xl w-9 h-9 flex items-center justify-center font-black text-lg shadow-neon-purple">
+          W
+        </span>
+        <span class="text-white font-black text-lg tracking-wider">오늘 뭐 먹지?</span>
+      </a>
+
+      <!-- Back Link -->
+      <button onclick="history.back()" class="text-sm font-semibold text-slate-300 hover:text-white flex items-center space-x-1">
+        <span>← 뒤로 가기</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-xl w-full mx-auto px-4 py-16 flex flex-col justify-center z-10">
+    
+    <!-- Title Section -->
+    <div class="text-center mb-8">
+      <span class="text-xs font-bold uppercase tracking-widest text-purple-400">Chef Selection</span>
+      <h2 id="foodTitle" class="text-3xl sm:text-4xl font-extrabold text-white mt-2">
+        레시피 셰프 선택
+      </h2>
+      <p class="text-slate-400 text-sm mt-2">
+        맛있는 요리를 완성하기 위한 최고의 셰프 레시피를 선택해 보세요!
+      </p>
+    </div>
+
+    <!-- Chef List Grid Container -->
+    <div class="glassmorphism rounded-3xl p-6 md:p-8 space-y-4 shadow-2xl" id="chefListContainer">
+      <!-- Loading State -->
+      <div class="py-12 flex flex-col items-center justify-center space-y-4">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+        <p class="text-slate-400 text-xs">해당 요리의 셰프 노트를 분석하는 중...</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 bg-slate-950/60 py-6 text-center text-xs text-slate-500 z-10">
+    <div class="max-w-6xl mx-auto px-4 space-y-2">
+      <p>© 2026 What-To-Eat. All rights reserved.</p>
+      <p class="text-slate-600">※ 본 서비스의 일부 링크는 쿠팡 파트너스 활동의 일환으로 소정의 수수료를 제공받을 수 있습니다.</p>
+    </div>
+  </footer>
+
+  <!-- Web App Logic -->
+  <script src="sheets.js"></script>
+  <script>
+    // URLUtils helper
+    const URLUtils = {
+      getParam(key) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(key);
+      }
+    };
+
+    const categoryCodeMap = {
+      '한식': 'what-to-eat-kr',
+      '중식': 'what-to-eat-ch',
+      '양식': 'what-to-eat-we',
+      '일식': 'what-to-eat-ja',
+      '반찬': 'what-to-eat-si',
+      '식재료 팁': 'what-to-eat-ti'
+    };
+
+    async function initApp() {
+      const foodName = URLUtils.getParam('food');
+      const foodTitleEl = document.getElementById('foodTitle');
+      const chefListContainer = document.getElementById('chefListContainer');
+
+      if (!foodName) {
+        alert('요리명이 올바르지 않습니다.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      foodTitleEl.textContent = `${foodName} 레시피`;
+
+      try {
+        const allRecipes = await SheetsManager.fetchSheetData();
+        // 동일한 요리명을 다루는 모든 레시피(셰프) 필터링
+        const matchingRecipes = allRecipes.filter(item => item.name === foodName);
+
+        if (matchingRecipes.length === 0) {
+          chefListContainer.innerHTML = `
+            <div class="py-12 text-center text-slate-400 text-sm">
+              죄송합니다. '${foodName}'에 대한 등록된 레시피가 없습니다.
+            </div>
+          `;
+          return;
+        }
+
+        // 셰프 리스트 빌드
+        chefListContainer.innerHTML = '';
+        matchingRecipes.forEach(recipe => {
+          const catCode = categoryCodeMap[recipe.category] || recipe.category;
+          const cleanCat = catCode.trim().replace(/\s+/g, '-');
+          const cleanFood = recipe.name.trim().replace(/\s+/g, '-');
+          const cleanChef = recipe.chefName.trim().replace(/\s+/g, '-');
+          const detailUrl = `/recipe/${cleanCat}-${cleanFood}-${cleanChef}`;
+
+          // 버튼 마크업 생성
+          const button = document.createElement('a');
+          button.href = detailUrl;
+          button.className = 'group flex items-center justify-between p-5 rounded-2xl border border-slate-800 hover:border-purple-500/50 bg-slate-900/30 hover:bg-purple-950/10 transition-all duration-300 hover:scale-[1.01] block shadow-sm';
+          
+          button.innerHTML = `
+            <div class="flex items-center space-x-4">
+              <div class="bg-gradient-to-tr from-purple-500 to-pink-500 text-white rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm shadow-inner group-hover:scale-105 transition-transform">
+                ${recipe.category === '식재료 팁' ? '📝' : recipe.chefName.substring(0, 1)}
+              </div>
+              <div class="text-left">
+                <span class="text-xs text-purple-400 font-bold uppercase tracking-wider">${recipe.chefName}</span>
+                <h4 class="font-extrabold text-white text-base group-hover:text-purple-300 transition-colors mt-0.5">
+                  ${recipe.chefName} ${recipe.name} 레시피 보러가기
+                </h4>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2 text-purple-400 group-hover:text-purple-300 font-bold text-xs">
+              <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+            </div>
+          `;
+          
+          chefListContainer.appendChild(button);
+        });
+
+      } catch (err) {
+        console.error('셰프 리스트 데이터 로드 실패:', err);
+        chefListContainer.innerHTML = `
+          <div class="py-12 text-center text-red-400 text-sm">
+            데이터를 불러오는 데 실패했습니다.
+          </div>
+        `;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
