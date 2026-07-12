@@ -111,7 +111,7 @@ function formatBlogRecipe(text) {
   if (!text) return '';
   const normalized = text.replace(/\r\n/g, '\n');
   const sections = normalized.split(/\n?(?=\[[^\]]+\])/);
-  let html = '<div class="space-y-10">';
+  let html = '<div class="space-y-6">';
 
   sections.forEach(section => {
     const lines = section.trim().split('\n');
@@ -119,41 +119,44 @@ function formatBlogRecipe(text) {
     
     if (headerMatch) {
       const headerTitle = headerMatch[1];
-      const contentText = lines.slice(1).join('\n').trim();
+      const contentText = lines.slice(1)
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+        .join('\n');
       
-      let colorClass = 'text-purple-700';
+      let colorClass = 'text-purple-400';
       let icon = '🧺';
       
       if (headerTitle.includes('재료')) {
-        colorClass = 'text-purple-700';
+        colorClass = 'text-purple-400';
         icon = '🧺';
       } else if (headerTitle.includes('양념') || headerTitle.includes('소스') || headerTitle.includes('계량')) {
-        colorClass = 'text-rose-600';
+        colorClass = 'text-rose-400';
         icon = '🧪';
       } else if (headerTitle.includes('순서') || headerTitle.includes('과정') || headerTitle.includes('방법') || headerTitle.includes('레시피')) {
-        colorClass = 'text-orange-600';
+        colorClass = 'text-orange-400';
         icon = '👩‍🍳';
       } else if (headerTitle.includes('팁')) {
-        colorClass = 'text-emerald-700';
+        colorClass = 'text-emerald-400';
         icon = '💡';
       }
 
       html += `
-        <div class="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-6 md:p-10 shadow-xl relative text-slate-800">
-          <h3 class="${colorClass} font-black text-xl md:text-2xl flex items-center space-x-2.5 border-b border-slate-200 pb-4 mb-6">
+        <div class="bg-slate-800/50 border border-slate-700/30 rounded-xl p-5 mb-6 text-slate-100 shadow-lg">
+          <h3 class="${colorClass} font-extrabold text-lg md:text-xl flex items-center space-x-2 border-b border-slate-700/50 pb-3 mb-4">
             <span>${icon}</span><span>${headerTitle}</span>
           </h3>
-          <div class="whitespace-pre-wrap tracking-wide font-medium" style="font-size: 1.1rem; line-height: 1.8; color: #333333; padding: 0 0.5rem;">
+          <div class="whitespace-pre-wrap tracking-wide font-medium leading-[1.8] space-y-3" style="font-size: 1.05rem; color: #e2e8f0; padding: 0 0.25rem;">
             ${contentText}
           </div>
         </div>
       `;
     } else {
-      const rawText = section.trim();
+      const rawText = lines.map(line => line.trim()).filter(line => line.length > 0).join('\n');
       if (rawText) {
         html += `
-          <div class="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-6 md:p-10 shadow-xl text-slate-800">
-            <div class="whitespace-pre-wrap tracking-wide font-medium" style="font-size: 1.1rem; line-height: 1.8; color: #333333; padding: 0 0.5rem;">
+          <div class="bg-slate-800/50 border border-slate-700/30 rounded-xl p-5 mb-6 text-slate-100 shadow-lg">
+            <div class="whitespace-pre-wrap tracking-wide font-medium leading-[1.8] space-y-3" style="font-size: 1.05rem; color: #e2e8f0; padding: 0 0.25rem;">
               ${rawText}
             </div>
           </div>
@@ -439,25 +442,19 @@ function initDetailPage(allMenus) {
 
   // 5. 하단 외부 연동 버튼 타겟 설정
   const watchVideoBtn = document.getElementById('watchVideoBtn');
-  const buyIngredientsBtn = document.getElementById('buyIngredientsBtn');
   const shareRecipeBtn = document.getElementById('shareRecipeBtn');
 
   // 유튜브 영상 링크 매핑
   if (watchVideoBtn) {
     watchVideoBtn.setAttribute('target', '_blank');
     watchVideoBtn.setAttribute('rel', 'noopener noreferrer');
-    watchVideoBtn.querySelector('span').textContent = '오피셜 영상 보러가기 🎬';
+    watchVideoBtn.querySelector('span').textContent = '유튜브 영상 보러가기 🎬';
     if (menu.videoUrl) {
       watchVideoBtn.href = menu.videoUrl;
     } else {
       const searchQuery = menu.category === '식재료 팁' ? menu.name : `${menu.name} ${menu.chefName} 레시피`;
       watchVideoBtn.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
     }
-  }
-
-  // 쿠팡 파트너스 링크 매핑
-  if (buyIngredientsBtn) {
-    buyIngredientsBtn.href = menu.coupangLink || `https://www.coupang.com/np/search?q=${encodeURIComponent(menu.name + ' 밀키트')}`;
   }
 
   // 레시피 공유 기능
@@ -506,23 +503,6 @@ function initDetailPage(allMenus) {
     videoModal.addEventListener('click', (e) => {
       if (e.target === videoModal) closeVideoModal();
     });
-  }
-
-  // 7. 마케팅/광고 영역 노출 제어 (ENABLE_MARKETING 플래그 기반)
-  const adSlotContainer = document.getElementById('adSlotContainer');
-  if (adSlotContainer) {
-    adSlotContainer.style.display = ENABLE_MARKETING ? 'block' : 'none';
-  }
-  
-  if (buyIngredientsBtn) {
-    buyIngredientsBtn.style.display = ENABLE_MARKETING ? 'flex' : 'none';
-    if (!ENABLE_MARKETING) {
-      const parentSection = buyIngredientsBtn.parentElement;
-      if (parentSection) {
-        parentSection.classList.remove('sm:grid-cols-3');
-        parentSection.classList.add('sm:grid-cols-2');
-      }
-    }
   }
 }
 

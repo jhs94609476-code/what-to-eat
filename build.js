@@ -241,7 +241,7 @@ function formatBlogRecipe(text) {
   if (!text) return '';
   const normalized = text.replace(/\r\n/g, '\n');
   const sections = normalized.split(/\n?(?=\[[^\]]+\])/);
-  let html = '<div class="space-y-10">';
+  let html = '<div class="space-y-6">';
 
   sections.forEach(section => {
     const lines = section.trim().split('\n');
@@ -249,41 +249,44 @@ function formatBlogRecipe(text) {
     
     if (headerMatch) {
       const headerTitle = headerMatch[1];
-      const contentText = lines.slice(1).join('\n').trim();
+      const contentText = lines.slice(1)
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+        .join('\n');
       
-      let colorClass = 'text-purple-700';
+      let colorClass = 'text-purple-400';
       let icon = '🧺';
       
       if (headerTitle.includes('재료')) {
-        colorClass = 'text-purple-700';
+        colorClass = 'text-purple-400';
         icon = '🧺';
       } else if (headerTitle.includes('양념') || headerTitle.includes('소스') || headerTitle.includes('계량')) {
-        colorClass = 'text-rose-600';
+        colorClass = 'text-rose-400';
         icon = '🧪';
       } else if (headerTitle.includes('순서') || headerTitle.includes('과정') || headerTitle.includes('방법') || headerTitle.includes('레시피')) {
-        colorClass = 'text-orange-600';
+        colorClass = 'text-orange-400';
         icon = '👩‍🍳';
       } else if (headerTitle.includes('팁')) {
-        colorClass = 'text-emerald-700';
+        colorClass = 'text-emerald-400';
         icon = '💡';
       }
 
       html += `
-        <div class="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-6 md:p-10 shadow-xl relative text-slate-800">
-          <h3 class="${colorClass} font-black text-xl md:text-2xl flex items-center space-x-2.5 border-b border-slate-200 pb-4 mb-6">
+        <div class="bg-slate-800/50 border border-slate-700/30 rounded-xl p-5 mb-6 text-slate-100 shadow-lg">
+          <h3 class="${colorClass} font-extrabold text-lg md:text-xl flex items-center space-x-2 border-b border-slate-700/50 pb-3 mb-4">
             <span>${icon}</span><span>${headerTitle}</span>
           </h3>
-          <div class="whitespace-pre-wrap tracking-wide font-medium" style="font-size: 1.1rem; line-height: 1.8; color: #333333; padding: 0 0.5rem;">
+          <div class="whitespace-pre-wrap tracking-wide font-medium leading-[1.8] space-y-3" style="font-size: 1.05rem; color: #e2e8f0; padding: 0 0.25rem;">
             ${contentText}
           </div>
         </div>
       `;
     } else {
-      const rawText = section.trim();
+      const rawText = lines.map(line => line.trim()).filter(line => line.length > 0).join('\n');
       if (rawText) {
         html += `
-          <div class="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-6 md:p-10 shadow-xl text-slate-800">
-            <div class="whitespace-pre-wrap tracking-wide font-medium" style="font-size: 1.1rem; line-height: 1.8; color: #333333; padding: 0 0.5rem;">
+          <div class="bg-slate-800/50 border border-slate-700/30 rounded-xl p-5 mb-6 text-slate-100 shadow-lg">
+            <div class="whitespace-pre-wrap tracking-wide font-medium leading-[1.8] space-y-3" style="font-size: 1.05rem; color: #e2e8f0; padding: 0 0.25rem;">
               ${rawText}
             </div>
           </div>
@@ -421,10 +424,6 @@ async function runBuild() {
     html = html.replace(/<span id="dishCategory"[^>]*>([\s\S]*?)<\/span>/, `<span id="dishCategory" class="px-3 py-1 text-xs font-bold rounded-full bg-purple-500 text-white shadow-neon-purple">${menu.category}</span>`);
     html = html.replace(/<h2 id="dishName"[^>]*>([\s\S]*?)<\/h2>/, `<h2 id="dishName" class="text-3xl sm:text-4xl font-extrabold text-white mt-2 drop-shadow-md">${menu.name}</h2>`);
     html = html.replace(/<p id="dishDescription"[^>]*>([\s\S]*?)<\/p>/, `<p id="dishDescription" class="text-slate-200 text-sm mt-1 max-w-xl drop-shadow">${menu.description.split('\n')[0]}</p>`);
-
-    // 3) 쿠팡 파트너스 링크 사전 적용
-    const coupangLink = menu.coupangLink || `https://www.coupang.com/np/search?q=${encodeURIComponent(menu.name + ' 밀키트')}`;
-    html = html.replace(/id="buyIngredientsBtn" href="#"/g, `id="buyIngredientsBtn" href="${coupangLink}"`);
 
     // 4) 유튜브 관련 비디오 링크 주입
     const youtubeLink = menu.videoUrl || `https://www.youtube.com/results?search_query=${encodeURIComponent(menu.category === '식재료 팁' ? menu.name : `${menu.name} ${menu.chefName} 레시피`)}`;
