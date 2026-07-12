@@ -245,17 +245,19 @@ function formatBlogRecipe(text) {
 
   sections.forEach(section => {
     const lines = section.trim().split('\n');
+    if (lines.length === 0) return;
+
     const headerMatch = lines[0].match(/^\[([^\]]+)\]/);
     
     if (headerMatch) {
       const headerTitle = headerMatch[1];
-      const contentText = lines.slice(1)
+      const sectionLines = lines.slice(1)
         .map(line => line.trim())
-        .filter(line => line.length > 0)
-        .join('\n');
+        .filter(line => line.length > 0);
       
       let colorClass = 'text-purple-400';
       let icon = '🧺';
+      let isStepSection = false;
       
       if (headerTitle.includes('재료')) {
         colorClass = 'text-purple-400';
@@ -266,9 +268,35 @@ function formatBlogRecipe(text) {
       } else if (headerTitle.includes('순서') || headerTitle.includes('과정') || headerTitle.includes('방법') || headerTitle.includes('레시피')) {
         colorClass = 'text-orange-400';
         icon = '👩‍🍳';
+        isStepSection = true;
       } else if (headerTitle.includes('팁')) {
         colorClass = 'text-emerald-400';
         icon = '💡';
+      }
+
+      let contentHtml = '';
+      if (isStepSection) {
+        sectionLines.forEach(line => {
+          const matchColon = line.match(/^(\d+\.\s*[^:]+:)(.*)$/);
+          if (matchColon) {
+            const stepTitle = matchColon[1];
+            const stepDesc = matchColon[2];
+            contentHtml += `<div class="mb-5 last:mb-0 leading-[1.7] text-slate-200"><span class="font-bold text-orange-400">${stepTitle}</span>${stepDesc}</div>`;
+          } else {
+            const matchNumber = line.match(/^(\d+\.)(.*)$/);
+            if (matchNumber) {
+              const numPrefix = matchNumber[1];
+              const remaining = matchNumber[2];
+              contentHtml += `<div class="mb-5 last:mb-0 leading-[1.7] text-slate-200"><span class="font-bold text-orange-400">${numPrefix}</span>${remaining}</div>`;
+            } else {
+              contentHtml += `<div class="mb-5 last:mb-0 leading-[1.7] text-slate-200">${line}</div>`;
+            }
+          }
+        });
+      } else {
+        sectionLines.forEach(line => {
+          contentHtml += `<div class="leading-[1.7] mb-2 last:mb-0 text-slate-200">${line}</div>`;
+        });
       }
 
       html += `
@@ -276,19 +304,23 @@ function formatBlogRecipe(text) {
           <h3 class="${colorClass} font-extrabold text-lg md:text-xl flex items-center space-x-2 border-b border-slate-700/50 pb-3 mb-4">
             <span>${icon}</span><span>${headerTitle}</span>
           </h3>
-          <div class="whitespace-pre-wrap tracking-wide font-medium leading-[1.8] space-y-3" style="font-size: 1.05rem; color: #e2e8f0; padding: 0 0.25rem;">
-            ${contentText}
-          </div>
+          <div class="font-medium" style="font-size: 1.05rem; padding: 0 0.25rem;">${contentHtml}</div>
         </div>
       `;
     } else {
-      const rawText = lines.map(line => line.trim()).filter(line => line.length > 0).join('\n');
-      if (rawText) {
+      const rawTextLines = lines
+        .map(line => line.trim())
+        .filter(line => line.length > 0);
+        
+      if (rawTextLines.length > 0) {
+        let contentHtml = '';
+        rawTextLines.forEach(line => {
+          contentHtml += `<div class="leading-[1.7] mb-2 last:mb-0 text-slate-200">${line}</div>`;
+        });
+        
         html += `
           <div class="bg-slate-800/50 border border-slate-700/30 rounded-xl p-5 mb-6 text-slate-100 shadow-lg">
-            <div class="whitespace-pre-wrap tracking-wide font-medium leading-[1.8] space-y-3" style="font-size: 1.05rem; color: #e2e8f0; padding: 0 0.25rem;">
-              ${rawText}
-            </div>
+            <div class="font-medium" style="font-size: 1.05rem; padding: 0 0.25rem;">${contentHtml}</div>
           </div>
         `;
       }
