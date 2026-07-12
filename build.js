@@ -556,11 +556,64 @@ async function runBuild() {
   fs.writeFileSync(path.join(DIST_DIR, 'sitemap.xml'), sitemapContent, 'utf-8');
   console.log('✅ sitemap.xml 생성 완료.');
 
-  // 7단계: robots.txt 자동 생성
+  // 7단계: rss.xml 자동 생성
+  console.log('📡 rss.xml 자동 생성 중...');
+  const pubDateStr = new Date().toUTCString();
+  let rssContent = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>오늘 뭐 먹지? - 요리 룰렛 및 황금 레시피</title>
+    <link>${SITE_DOMAIN}</link>
+    <description>셰프별 황금 레시피와 식재료 고르는 꿀팁을 제공합니다.</description>
+    <language>ko</language>
+    <pubDate>${pubDateStr}</pubDate>
+    <lastBuildDate>${pubDateStr}</lastBuildDate>
+`;
+
+  allMenus.forEach((menu) => {
+    const catCode = categoryCodeMap[menu.category] || menu.category;
+    const cleanCat = catCode.trim().replace(/\s+/g, '-');
+    const cleanFood = menu.name.trim().replace(/\s+/g, '-');
+    const cleanChef = menu.chefName.trim().replace(/\s+/g, '-');
+    const pathName = `recipe/${cleanCat}-${cleanFood}-${cleanChef}/`;
+    const fullUrl = `${SITE_DOMAIN}/${pathName}`;
+    
+    const cleanDescription = (menu.description || '')
+      .split('\n')[0]
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+
+    const cleanTitle = `${menu.name} 황금 레시피 - ${menu.chefName}`
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+
+    rssContent += `    <item>
+      <title>${cleanTitle}</title>
+      <link>${fullUrl}</link>
+      <description>${cleanDescription}</description>
+      <pubDate>${pubDateStr}</pubDate>
+      <guid isPermaLink="true">${fullUrl}</guid>
+    </item>\n`;
+  });
+
+  rssContent += `  </channel>
+</rss>`;
+
+  fs.writeFileSync(path.join(DIST_DIR, 'rss.xml'), rssContent, 'utf-8');
+  console.log('✅ rss.xml 생성 완료.');
+
+  // 8단계: robots.txt 자동 생성
   console.log('🤖 robots.txt 자동 생성 중...');
   const robotsContent = `User-agent: *
 Allow: /
 Sitemap: ${SITE_DOMAIN}/sitemap.xml
+Sitemap: ${SITE_DOMAIN}/rss.xml
 `;
   fs.writeFileSync(path.join(DIST_DIR, 'robots.txt'), robotsContent, 'utf-8');
   console.log('✅ robots.txt 생성 완료.');

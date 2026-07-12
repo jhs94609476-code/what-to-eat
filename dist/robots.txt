@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
 Sitemap: https://what-to-eat-roulette.vercel.app/sitemap.xml
+Sitemap: https://what-to-eat-roulette.vercel.app/rss.xml
