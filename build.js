@@ -236,6 +236,54 @@ function flattenData(nestedMenus) {
   return flat;
 }
 
+// XML 이스케이프 및 제어 문자 제거 헬퍼
+function escapeXml(unsafe) {
+  if (!unsafe) return '';
+  return unsafe
+    .replace(/[<>&'"]/g, (c) => {
+      switch (c) {
+        case '<': return '&lt;';
+        case '>': return '&gt;';
+        case '&': return '&amp;';
+        case '\'': return '&apos;';
+        case '"': return '&quot;';
+      }
+    })
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/g, ''); // XML 유효하지 않은 제어 문자 완전 제거
+}
+
+// RSS용 깔끔한 본문 요약 추출기
+function getCleanRssDescription(description, name, chefName) {
+  if (!description) return `${name} 황금 레시피 - ${chefName}`;
+  let cleanText = description
+    .replace(/\[[^\]]+\]/g, '') // 대괄호 섹션명 제거
+    .replace(/\r?\n/g, ' ')     // 개행문자를 공백으로 변환
+    .replace(/\s+/g, ' ')       // 연속된 공백 단일화
+    .trim();
+  
+  if (cleanText.length > 200) {
+    cleanText = cleanText.substring(0, 197) + '...';
+  }
+  return cleanText || `${name} 황금 레시피 - ${chefName}`;
+}
+
+// RFC 822 표준 날짜 포맷터
+function formatRFC822Date(date) {
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const pad = (n) => (n < 10 ? '0' + n : n);
+  
+  const dayName = days[date.getUTCDay()];
+  const day = pad(date.getUTCDate());
+  const monthName = months[date.getUTCMonth()];
+  const year = date.getUTCFullYear();
+  const hours = pad(date.getUTCHours());
+  const minutes = pad(date.getUTCMinutes());
+  const seconds = pad(date.getUTCSeconds());
+  
+  return `${dayName}, ${day} ${monthName} ${year} ${hours}:${minutes}:${seconds} +0000`;
+}
+
 // 블로그 포스팅 형태의 상세 레시피 마크업 생성기
 function formatBlogRecipe(text) {
   if (!text) return '';
@@ -558,7 +606,7 @@ async function runBuild() {
 
   // 7단계: rss.xml 자동 생성
   console.log('📡 rss.xml 자동 생성 중...');
-  const pubDateStr = new Date().toUTCString();
+  const pubDateStr = formatRFC822Date(new Date());
   let rssContent = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
@@ -578,27 +626,16 @@ async function runBuild() {
     const pathName = `recipe/${cleanCat}-${cleanFood}-${cleanChef}/`;
     const fullUrl = `${SITE_DOMAIN}/${pathName}`;
     
-    const cleanDescription = (menu.description || '')
-      .split('\n')[0]
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&apos;');
-
-    const cleanTitle = `${menu.name} 황금 레시피 - ${menu.chefName}`
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&apos;');
+    const cleanDescription = escapeXml(getCleanRssDescription(menu.description, menu.name, menu.chefName));
+    const cleanTitle = escapeXml(`${menu.name} 황금 레시피 - ${menu.chefName}`);
+    const cleanUrl = escapeXml(fullUrl);
 
     rssContent += `    <item>
       <title>${cleanTitle}</title>
-      <link>${fullUrl}</link>
+      <link>${cleanUrl}</link>
       <description>${cleanDescription}</description>
       <pubDate>${pubDateStr}</pubDate>
-      <guid isPermaLink="true">${fullUrl}</guid>
+      <guid isPermaLink="true">${cleanUrl}</guid>
     </item>\n`;
   });
 
