@@ -109,39 +109,78 @@ function parseRecipeURL(pathname) {
 // 블로그 포스팅 형태의 상세 레시피 마크업 생성기
 function formatBlogRecipe(text) {
   if (!text) return '';
-  const normalized = text.replace(/\r\n/g, '\n');
-  const sections = normalized.split(/\n?(?=\[[^\]]+\])/);
+  const normalized = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const sections = normalized.split(/\n?(?=\[[^\]]+\]|<[^>]+>|\([^\)]+\)|\{[^\}]+\})/);
   let html = '<div class="space-y-6">';
 
   sections.forEach(section => {
-    const lines = section.trim().split('\n');
+    const lines = section.split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0);
+      
     if (lines.length === 0) return;
 
-    const headerMatch = lines[0].match(/^\[([^\]]+)\]/);
+    const headerMatch = lines[0].match(/^[\[<({]([^\]>)}]+)[\]>)}]/);
     
     if (headerMatch) {
-      const headerTitle = headerMatch[1];
+      const headerTitle = headerMatch[1].trim();
       const sectionLines = lines.slice(1)
-        .map(line => line.trim())
-        .filter(line => line.length > 0);
+        .filter(line => line !== '-' && line !== '*' && line !== '.');
       
       let colorClass = 'text-purple-400';
       let icon = '🧺';
       let isStepSection = false;
       
-      if (headerTitle.includes('재료')) {
+      const titleLower = headerTitle.toLowerCase();
+      if (
+        titleLower.includes('재료') || 
+        titleLower.includes('기본') || 
+        titleLower.includes('고기') || 
+        titleLower.includes('채소') || 
+        titleLower.includes('야채') ||
+        titleLower.includes('해물') ||
+        titleLower.includes('오징어') ||
+        titleLower.includes('덮밥용') ||
+        titleLower.includes('육수')
+      ) {
         colorClass = 'text-purple-400';
         icon = '🧺';
-      } else if (headerTitle.includes('양념') || headerTitle.includes('소스') || headerTitle.includes('계량')) {
+      } else if (
+        titleLower.includes('양념') || 
+        titleLower.includes('소스') || 
+        titleLower.includes('계량') || 
+        titleLower.includes('스프') || 
+        titleLower.includes('다대기') ||
+        titleLower.includes('양념장') ||
+        titleLower.includes('밑양념') ||
+        titleLower.includes('추가양념')
+      ) {
         colorClass = 'text-rose-400';
         icon = '🧪';
-      } else if (headerTitle.includes('순서') || headerTitle.includes('과정') || headerTitle.includes('방법') || headerTitle.includes('레시피')) {
+      } else if (
+        titleLower.includes('순서') || 
+        titleLower.includes('과정') || 
+        titleLower.includes('방법') || 
+        titleLower.includes('레시피') || 
+        titleLower.includes('조리') ||
+        titleLower.includes('만들기') ||
+        titleLower.includes('만드는')
+      ) {
         colorClass = 'text-orange-400';
         icon = '👩‍🍳';
         isStepSection = true;
-      } else if (headerTitle.includes('팁')) {
+      } else if (
+        titleLower.includes('팁') || 
+        titleLower.includes('마무리') ||
+        titleLower.includes('포인트') ||
+        titleLower.includes('비법')
+      ) {
         colorClass = 'text-emerald-400';
         icon = '💡';
+      } else {
+        // Fallback default
+        colorClass = 'text-purple-400';
+        icon = '🧺';
       }
 
       let contentHtml = '';
@@ -169,18 +208,20 @@ function formatBlogRecipe(text) {
         });
       }
 
-      html += `
-        <div class="bg-slate-800/50 border border-slate-700/30 rounded-xl p-5 mb-6 text-slate-100 shadow-lg">
-          <h3 class="${colorClass} font-extrabold text-lg md:text-xl flex items-center space-x-2 border-b border-slate-700/50 pb-3 mb-4">
-            <span>${icon}</span><span>${headerTitle}</span>
-          </h3>
-          <div class="font-medium" style="font-size: 1.05rem; padding: 0 0.25rem;">${contentHtml}</div>
-        </div>
-      `;
+      // Only add to html if we actually have some text in contentHtml (preventing empty blocks from rendering)
+      if (contentHtml) {
+        html += `
+          <div class="bg-slate-800/50 border border-slate-700/30 rounded-xl p-5 mb-6 text-slate-100 shadow-lg">
+            <h3 class="${colorClass} font-extrabold text-lg md:text-xl flex items-center space-x-2 border-b border-slate-700/50 pb-3 mb-4">
+              <span>${icon}</span><span>${headerTitle}</span>
+            </h3>
+            <div class="font-medium" style="font-size: 1.05rem; padding: 0 0.25rem;">${contentHtml}</div>
+          </div>
+        `;
+      }
     } else {
       const rawTextLines = lines
-        .map(line => line.trim())
-        .filter(line => line.length > 0);
+        .filter(line => line !== '-' && line !== '*' && line !== '.');
         
       if (rawTextLines.length > 0) {
         let contentHtml = '';
@@ -188,11 +229,13 @@ function formatBlogRecipe(text) {
           contentHtml += `<div class="leading-[1.7] mb-2 last:mb-0 text-slate-200">${line}</div>`;
         });
         
-        html += `
-          <div class="bg-slate-800/50 border border-slate-700/30 rounded-xl p-5 mb-6 text-slate-100 shadow-lg">
-            <div class="font-medium" style="font-size: 1.05rem; padding: 0 0.25rem;">${contentHtml}</div>
-          </div>
-        `;
+        if (contentHtml) {
+          html += `
+            <div class="bg-slate-800/50 border border-slate-700/30 rounded-xl p-5 mb-6 text-slate-100 shadow-lg">
+              <div class="font-medium" style="font-size: 1.05rem; padding: 0 0.25rem;">${contentHtml}</div>
+            </div>
+          `;
+        }
       }
     }
   });
