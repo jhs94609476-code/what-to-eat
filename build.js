@@ -252,6 +252,15 @@ function escapeXml(unsafe) {
     .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/g, ''); // XML 유효하지 않은 제어 문자 완전 제거
 }
 
+// CDATA 안전 래퍼 및 제어 문자 제거 헬퍼
+function wrapCdata(text) {
+  if (!text) return '<![CDATA[]]>';
+  const clean = text
+    .replace(/\]\]>/g, ']]&gt;') // CDATA 종료 시퀀스 이스케이프
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/g, ''); // XML 유효하지 않은 제어 문자 완전 제거
+  return `<![CDATA[${clean}]]>`;
+}
+
 // RSS용 깔끔한 본문 요약 추출기
 function getCleanRssDescription(description, name, chefName) {
   if (!description) return `${name} 황금 레시피 - ${chefName}`;
@@ -607,10 +616,8 @@ async function runBuild() {
   // 7단계: rss.xml 자동 생성
   console.log('📡 rss.xml 자동 생성 중...');
   const pubDateStr = formatRFC822Date(new Date());
-  let rssContent = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
-  <channel>
-    <title>오늘 뭐 먹지? - 요리 룰렛 및 황금 레시피</title>
+  let rssContent = '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n';
+  rssContent += `    <title>오늘 뭐 먹지? - 요리 룰렛 및 황금 레시피</title>
     <link>${SITE_DOMAIN}</link>
     <description>셰프별 황금 레시피와 식재료 고르는 꿀팁을 제공합니다.</description>
     <language>ko</language>
@@ -626,8 +633,8 @@ async function runBuild() {
     const pathName = `recipe/${cleanCat}-${cleanFood}-${cleanChef}/`;
     const fullUrl = `${SITE_DOMAIN}/${pathName}`;
     
-    const cleanDescription = escapeXml(getCleanRssDescription(menu.description, menu.name, menu.chefName));
-    const cleanTitle = escapeXml(`${menu.name} 황금 레시피 - ${menu.chefName}`);
+    const cleanDescription = wrapCdata(getCleanRssDescription(menu.description, menu.name, menu.chefName));
+    const cleanTitle = wrapCdata(`${menu.name} 황금 레시피 - ${menu.chefName}`);
     const cleanUrl = escapeXml(fullUrl);
 
     rssContent += `    <item>
