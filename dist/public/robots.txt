@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
-Sitemap: https://what-to-eat-roulette.vercel.app/sitemap.xml
-Sitemap: https://what-to-eat-roulette.vercel.app/rss.xml
-Sitemap: https://what-to-eat-roulette.vercel.app/feed.xml
+Sitemap: https://what-to-eat-sooty-gamma.vercel.app/sitemap.xml
+Sitemap: https://what-to-eat-sooty-gamma.vercel.app/rss.xml
+Sitemap: https://what-to-eat-sooty-gamma.vercel.app/feed.xml

@@ -6,7 +6,7 @@ const DIST_DIR = path.join(__dirname, 'dist');
 
 const SPREADSHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStAETGqwhy2ux_FQAzPeS_bPUu_pIk_F7n79vO7LKCgAZ1KYHnqJ37WX5c2Higqtzx8gG6HBq7zouS/pub?gid=0&single=true&output=csv';
 
-const SITE_DOMAIN = 'https://what-to-eat-roulette.vercel.app';
+const SITE_DOMAIN = 'https://what-to-eat-sooty-gamma.vercel.app';
 
 
 const categoryCodeMap = {
