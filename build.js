@@ -431,6 +431,29 @@ function formatBlogRecipe(text) {
   return html;
 }
 
+// 다중 타겟 폴더에 파일 저장 (dist, 루트, public 등)
+function saveFile(fileName, content) {
+  // 1. dist/
+  fs.writeFileSync(path.join(DIST_DIR, fileName), content, 'utf-8');
+  
+  // 2. 루트 폴더
+  fs.writeFileSync(path.join(__dirname, fileName), content, 'utf-8');
+  
+  // 3. 루트/public/
+  const publicDir = path.join(__dirname, 'public');
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
+  }
+  fs.writeFileSync(path.join(publicDir, fileName), content, 'utf-8');
+
+  // 4. dist/public/
+  const distPublicDir = path.join(DIST_DIR, 'public');
+  if (!fs.existsSync(distPublicDir)) {
+    fs.mkdirSync(distPublicDir, { recursive: true });
+  }
+  fs.writeFileSync(path.join(distPublicDir, fileName), content, 'utf-8');
+}
+
 // 비동기 빌드 프로세스 실행기
 async function runBuild() {
   console.log('🚀 완벽한 클린 정적 사이트 생성(SSG) 빌드를 시작합니다...');
@@ -532,13 +555,18 @@ async function runBuild() {
 
     html = html.replace('<title>요리 상세 레시피 - 오늘 뭐 먹지?</title>', `<title>${titleText}</title>`);
     
+    const encodedCat = encodeURIComponent(cleanCat);
+    const encodedFood = encodeURIComponent(cleanFood);
+    const encodedChef = encodeURIComponent(cleanChef);
+    const encodedPathName = `recipe/${encodedCat}-${encodedFood}-${encodedChef}/`;
+
     const metaReplacement = `<meta name="description" content="${descText}">
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="${titleText}">
   <meta property="og:description" content="${descText}">
   <meta property="og:image" content="${menu.image}">
-  <meta property="og:url" content="${SITE_DOMAIN}/recipe/${cleanCat}-${cleanFood}-${cleanChef}/">
+  <meta property="og:url" content="${SITE_DOMAIN}/${encodedPathName}">
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="${titleText}">
@@ -583,7 +611,11 @@ async function runBuild() {
         const cleanCatCode = catCode.trim().replace(/\s+/g, '-');
         const cleanFoodName = recipe.name.trim().replace(/\s+/g, '-');
         const cleanChefName = recipe.chefName.trim().replace(/\s+/g, '-');
-        const detailUrl = `/recipe/${cleanCatCode}-${cleanFoodName}-${cleanChefName}/`;
+        
+        const encodedCatCode = encodeURIComponent(cleanCatCode);
+        const encodedFoodName = encodeURIComponent(cleanFoodName);
+        const encodedChefName = encodeURIComponent(cleanChefName);
+        const detailUrl = `/recipe/${encodedCatCode}-${encodedFoodName}-${encodedChefName}/`;
 
         otherChefsHtml += `<a href="${detailUrl}" class="px-4 py-2.5 rounded-2xl border border-slate-800 hover:border-purple-500/50 bg-slate-900/40 hover:bg-purple-950/10 text-xs font-bold text-slate-300 hover:text-purple-300 transition-all duration-300">${recipe.chefName} 레시피 보러가기</a>\n`;
       });
@@ -643,7 +675,11 @@ async function runBuild() {
     const cleanCat = catCode.trim().replace(/\s+/g, '-');
     const cleanFood = menu.name.trim().replace(/\s+/g, '-');
     const cleanChef = menu.chefName.trim().replace(/\s+/g, '-');
-    const pathName = `recipe/${cleanCat}-${cleanFood}-${cleanChef}/`;
+    
+    const encodedCat = encodeURIComponent(cleanCat);
+    const encodedFood = encodeURIComponent(cleanFood);
+    const encodedChef = encodeURIComponent(cleanChef);
+    const pathName = `recipe/${encodedCat}-${encodedFood}-${encodedChef}/`;
     
     sitemapContent += `  <url>
     <loc>${SITE_DOMAIN}/${pathName}</loc>
@@ -653,11 +689,11 @@ async function runBuild() {
   });
 
   sitemapContent += `</urlset>`;
-  fs.writeFileSync(path.join(DIST_DIR, 'sitemap.xml'), sitemapContent, 'utf-8');
+  saveFile('sitemap.xml', sitemapContent);
   console.log('✅ sitemap.xml 생성 완료.');
 
   // 7단계: rss.xml 자동 생성
-  console.log('📡 rss.xml 자동 생성 중...');
+  console.log('📡 rss.xml 및 feed.xml 자동 생성 중...');
   const pubDateStr = formatRFC822Date(new Date());
   let rssContent = '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n';
   rssContent += `    <title>오늘 뭐 먹지? - 요리 룰렛 및 황금 레시피</title>
@@ -673,7 +709,11 @@ async function runBuild() {
     const cleanCat = catCode.trim().replace(/\s+/g, '-');
     const cleanFood = menu.name.trim().replace(/\s+/g, '-');
     const cleanChef = menu.chefName.trim().replace(/\s+/g, '-');
-    const pathName = `recipe/${cleanCat}-${cleanFood}-${cleanChef}/`;
+    
+    const encodedCat = encodeURIComponent(cleanCat);
+    const encodedFood = encodeURIComponent(cleanFood);
+    const encodedChef = encodeURIComponent(cleanChef);
+    const pathName = `recipe/${encodedCat}-${encodedFood}-${encodedChef}/`;
     const fullUrl = `${SITE_DOMAIN}/${pathName}`;
     
     const cleanDescription = wrapCdata(getCleanRssDescription(menu.description, menu.name, menu.chefName));
@@ -692,8 +732,9 @@ async function runBuild() {
   rssContent += `  </channel>
 </rss>`;
 
-  fs.writeFileSync(path.join(DIST_DIR, 'rss.xml'), rssContent, 'utf-8');
-  console.log('✅ rss.xml 생성 완료.');
+  saveFile('rss.xml', rssContent);
+  saveFile('feed.xml', rssContent);
+  console.log('✅ rss.xml 및 feed.xml 생성 완료.');
 
   // 8단계: robots.txt 자동 생성
   console.log('🤖 robots.txt 자동 생성 중...');
@@ -701,8 +742,9 @@ async function runBuild() {
 Allow: /
 Sitemap: ${SITE_DOMAIN}/sitemap.xml
 Sitemap: ${SITE_DOMAIN}/rss.xml
+Sitemap: ${SITE_DOMAIN}/feed.xml
 `;
-  fs.writeFileSync(path.join(DIST_DIR, 'robots.txt'), robotsContent, 'utf-8');
+  saveFile('robots.txt', robotsContent);
   console.log('✅ robots.txt 생성 완료.');
 
   console.log(`✨ 빌드가 완료되었습니다! 총 ${pagesCount}개의 레시피 정적 상세 페이지가 성공적으로 구워졌습니다.`);
