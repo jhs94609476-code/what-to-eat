@@ -1,5 +1,3 @@
 User-agent: *
 Allow: /
 Sitemap: https://what-to-eat-sooty-gamma.vercel.app/sitemap.xml
-Sitemap: https://what-to-eat-sooty-gamma.vercel.app/rss.xml
-Sitemap: https://what-to-eat-sooty-gamma.vercel.app/feed.xml

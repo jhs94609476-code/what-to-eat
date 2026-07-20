@@ -741,8 +741,6 @@ async function runBuild() {
   const robotsContent = `User-agent: *
 Allow: /
 Sitemap: ${SITE_DOMAIN}/sitemap.xml
-Sitemap: ${SITE_DOMAIN}/rss.xml
-Sitemap: ${SITE_DOMAIN}/feed.xml
 `;
   saveFile('robots.txt', robotsContent);
   console.log('✅ robots.txt 생성 완료.');
